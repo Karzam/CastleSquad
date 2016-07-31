@@ -10,10 +10,10 @@ public class BattleManager : MonoBehaviour
 	public event UIEvent onStartPlayerPhase;
 
 	// Battle phases
-	enum Phase {Player, Enemy};
+	public enum Phase {Player, Enemy};
 
 	// Current battle phase
-	Phase phase;
+	public Phase phase;
 
 	void Awake()
 	{

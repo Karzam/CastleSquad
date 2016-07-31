@@ -3,9 +3,8 @@ using System.Collections;
 
 public class InputManager : MonoBehaviour
 {
-
-	// Bouton en cours d'interaction  
-	public Button button;
+	// Interacted object
+	GameObject interacted;
 
 	// Use this for initialization
 	void Start ()
@@ -16,25 +15,28 @@ public class InputManager : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-		checkTouchEvent();
+		TouchEvent();
+		MouseEvent();
 	}
 
-	// Détecte les inputs tactiles 
-	private void checkTouchEvent() {
+	// Check for touch input
+	private void TouchEvent() {
 
 		// Touch 
-		if (Input.touchCount > 0) {
-			// Début du touch 
+		if (Input.touchCount > 0)
+		{
 			if (Input.GetTouch(0).phase == TouchPhase.Began) {
 				beganTouchEvent(Input.GetTouch(0).position);
 			}
-			// Fin du touch 
 			else if (Input.GetTouch(0).phase == TouchPhase.Ended) {
 				endedTouchEvent();
 			}
 		}
-		// Souris
-		else if (Input.GetMouseButtonDown(0)) {
+	}
+
+	private void MouseEvent()
+	{
+		if (Input.GetMouseButtonDown(0)) {
 			beganTouchEvent(Input.mousePosition);
 		}
 		else if (Input.GetMouseButtonUp(0)) {
@@ -42,7 +44,7 @@ public class InputManager : MonoBehaviour
 		}
 	}
 	
-	// Début d'input 
+	// Input start
 	private void beganTouchEvent(Vector3 touchPosition) {
 		
 		Vector3 screenPoint = Camera.main.ScreenToWorldPoint(touchPosition);
@@ -50,18 +52,17 @@ public class InputManager : MonoBehaviour
 		Vector2 touchPos = new Vector2(screenPoint.x, screenPoint.y);
 		Collider2D hit = Physics2D.OverlapPoint(touchPos);
 		
-		if (hit) {
-
-			if (GameObject.Find(hit.gameObject.name)) {
-				this.button = GameObject.Find(hit.gameObject.name).GetComponent<Button>();
-				button.pressed();
-			}
+		if (hit)
+		{
+			interacted = hit.gameObject;
+			hit.gameObject.BroadcastMessage("OnTouchDown");
 		}
 	}
 	
-	// Fin d'input 
-	private void endedTouchEvent() {
-
-		button.released();
+	// Input end
+	private void endedTouchEvent()
+	{
+		interacted.gameObject.BroadcastMessage("OnTouchUp");
+		interacted = null;
 	}
 }
