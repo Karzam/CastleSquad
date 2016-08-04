@@ -23,7 +23,14 @@ public class BattleManager : MonoBehaviour
 	// Use this for initialization
 	public void Start ()
 	{
+		MapManager.instance.InitializeMap();
+		InstantiateCharacters();
 		StartPlayerPhase();
+	}
+
+	void InstantiateCharacters()
+	{
+		CharacterManager.instance.InstantiatePlayerSquad();
 	}
 
 	// Trigger player phase
@@ -31,12 +38,6 @@ public class BattleManager : MonoBehaviour
 	{
 		phase = Phase.Player;
 		onStartPlayerPhase();
-	}
-
-	// Update is called once per frame
-	void Update ()
-	{
-	
 	}
 }
 
