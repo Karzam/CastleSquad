@@ -7,7 +7,9 @@ public class Sorcerer : Character
 	// Use this for initialization
 	protected void Start ()
 	{
-		startCoordinates = new Vector2(1, 1);
+		startCoordinates = new Vector2(8, 1);
+		movementPoints = 3;
+
 		base.Start();
 	}
 	

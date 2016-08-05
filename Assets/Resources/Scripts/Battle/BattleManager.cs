@@ -19,8 +19,7 @@ public class BattleManager : MonoBehaviour
 	{
 		instance = this;
 	}
-
-	// Use this for initialization
+		
 	public void Start ()
 	{
 		MapManager.instance.InitializeMap();
@@ -28,12 +27,17 @@ public class BattleManager : MonoBehaviour
 		StartPlayerPhase();
 	}
 
+	/*
+	 * Draw player and enemy squads
+	 */
 	void InstantiateCharacters()
 	{
 		CharacterManager.instance.InstantiatePlayerSquad();
 	}
 
-	// Trigger player phase
+	/*
+	 * Trigger player phase
+	 */
 	void StartPlayerPhase()
 	{
 		phase = Phase.Player;

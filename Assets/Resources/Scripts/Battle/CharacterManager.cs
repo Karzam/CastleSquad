@@ -13,13 +13,14 @@ public class CharacterManager : MonoBehaviour
 	{
 		instance = this;
 	}
-
-	// Use this for initialization
+		
 	void Start ()
 	{
-	
 	}
 
+	/*
+	 * Add player characters on the map
+	 */
 	public void InstantiatePlayerSquad()
 	{
 		// Add characters to the squad
@@ -31,9 +32,6 @@ public class CharacterManager : MonoBehaviour
 		squad = new List<GameObject>{warrior, knight, sorcerer, thief};
 
 		Transform parent = GameObject.Find("Characters").transform;
-
-		// Set parent to map origin
-		parent.position = new Vector3(-156, -80.4f, -1);
 
 		foreach(GameObject character in squad)
 		{

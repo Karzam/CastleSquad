@@ -8,6 +8,8 @@ public class Warrior : Character
 	protected void Start ()
 	{
 		startCoordinates = new Vector2(3, 2);
+		movementPoints = 2;
+
 		base.Start();
 	}
 	

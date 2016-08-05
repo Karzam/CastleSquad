@@ -57,12 +57,18 @@ public class InputManager : MonoBehaviour
 			interacted = hit.gameObject;
 			hit.gameObject.BroadcastMessage("OnTouchDown");
 		}
+		else {
+			// No collider touched
+		}
 	}
 	
 	// Input end
 	private void endedTouchEvent()
 	{
-		interacted.gameObject.BroadcastMessage("OnTouchUp");
-		interacted = null;
+		if (interacted != null)
+		{
+			interacted.gameObject.BroadcastMessage("OnTouchUp");
+			interacted = null;
+		}
 	}
 }

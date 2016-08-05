@@ -9,7 +9,13 @@ public class MapManager : MonoBehaviour
 	[SerializeField]
 	GameObject grassMap;
 
-	Dictionary<Vector2, GameObject> model;
+	[SerializeField]
+	GameObject highlightedTile;
+
+	// Coordinates map
+	public Dictionary<Vector2, GameObject> model;
+
+	List<GameObject> highlightTiles = new List<GameObject>();
 
 	public const float TILE_SIZE = 22.4f;
 	
@@ -21,11 +27,13 @@ public class MapManager : MonoBehaviour
 		instance = this;
 	}
 
-	// Use this for initialization
 	void Start ()
 	{
 	}
 
+	/*
+	 * Draw the tilemap and fill the model array
+	 */
 	public void InitializeMap()
 	{
 		GameObject map = Instantiate(grassMap, GameObject.Find("Map").transform) as GameObject;
@@ -42,14 +50,47 @@ public class MapManager : MonoBehaviour
 		}
 	}
 
+	/*
+	 * Get model coordinates with view position
+	 */
 	public Vector2 GetModelCoordinates(Vector2 position)
 	{
 		return new Vector2(Mathf.Floor(position.x / MAP_WIDTH), Mathf.Floor(position.y / MAP_HEIGHT));
 	}
 
+	/*
+	 * Get view position with model coordinates
+	 */
 	public Vector2 GetViewCoordinates(Vector2 position)
 	{
 		return new Vector2(position.x * TILE_SIZE, position.y * TILE_SIZE);
+	}
+
+	/*
+	 * Set highlight on tiles available to move
+	 */
+	public void EnableTilesHighlight(List<Vector2> tiles)
+	{
+		Transform parent = GameObject.Find("Map").transform;
+
+		foreach (Vector2 tile in tiles)
+		{
+			GameObject highlight = Instantiate(highlightedTile) as GameObject;
+			highlight.transform.parent = parent;
+			highlight.transform.localPosition = GetViewCoordinates(tile);
+			highlightTiles.Add(highlight);
+		}
+	}
+
+	/*
+	 * Delete highlight on tiles
+	 */
+	public void DisableTilesHighlight()
+	{
+		foreach (GameObject tile in highlightTiles)
+		{
+			Destroy(tile);
+		}
 	}
 
 }

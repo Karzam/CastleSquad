@@ -8,6 +8,8 @@ public class Knight : Character
 	protected void Start ()
 	{
 		startCoordinates = new Vector2(2, 3);
+		movementPoints = 3;
+
 		base.Start();
 	}
 	

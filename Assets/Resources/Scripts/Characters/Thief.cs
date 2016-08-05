@@ -8,6 +8,8 @@ public class Thief : Character
 	protected void Start ()
 	{
 		startCoordinates = new Vector2(1, 4);
+		movementPoints = 4;
+
 		base.Start();
 	}
 	
