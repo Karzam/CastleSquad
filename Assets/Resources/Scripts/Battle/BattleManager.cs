@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/**
+ * Manage all the battle phases
+ */
 public class BattleManager : MonoBehaviour
 {
 	public static BattleManager instance;

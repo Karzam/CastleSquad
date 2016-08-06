@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/**
+ * Instantiate player & enemy squads
+ */
 public class CharacterManager : MonoBehaviour
 {
 	public static CharacterManager instance;

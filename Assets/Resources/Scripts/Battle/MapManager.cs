@@ -2,6 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/**
+ * Manage the tilemap and contains
+ * model and view properties & methods
+ */
 public class MapManager : MonoBehaviour
 {
 	public static MapManager instance;
@@ -11,6 +15,12 @@ public class MapManager : MonoBehaviour
 
 	[SerializeField]
 	GameObject highlightedTile;
+
+	[SerializeField]
+	Sprite highlightSprite;
+
+	[SerializeField]
+	Sprite selectedSprite;
 
 	// Coordinates map
 	public Dictionary<Vector2, GameObject> model;
@@ -55,7 +65,7 @@ public class MapManager : MonoBehaviour
 	 */
 	public Vector2 GetModelCoordinates(Vector2 position)
 	{
-		return new Vector2(Mathf.Floor(position.x / MAP_WIDTH), Mathf.Floor(position.y / MAP_HEIGHT));
+		return new Vector2(Mathf.Floor(position.x / TILE_SIZE), Mathf.Floor(position.y / TILE_SIZE));
 	}
 
 	/*
@@ -90,6 +100,27 @@ public class MapManager : MonoBehaviour
 		foreach (GameObject tile in highlightTiles)
 		{
 			Destroy(tile);
+		}
+	}
+
+	/*
+	 * Tint tile highlight in red
+	 */
+	public void TintTileHighlight(Vector2 tile)
+	{
+		foreach (GameObject lTile in highlightTiles)
+		{
+			if (lTile != null)
+			{
+				if (GetModelCoordinates(lTile.transform.localPosition) != tile) {
+					if (lTile.GetComponent<SpriteRenderer>().sprite != highlightSprite) {
+						lTile.GetComponent<SpriteRenderer>().sprite = highlightSprite;
+					}
+				}
+				else {
+					lTile.GetComponent<SpriteRenderer>().sprite = selectedSprite;
+				}
+			}
 		}
 	}
 
