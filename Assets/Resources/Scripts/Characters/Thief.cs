@@ -7,7 +7,7 @@ public class Thief : Character
 	// Use this for initialization
 	protected void Start ()
 	{
-		startCoordinates = new Vector2(1, 4);
+		startCoordinates = new Vector2(6, 4);
 		movementPoints = 4;
 
 		base.Start();

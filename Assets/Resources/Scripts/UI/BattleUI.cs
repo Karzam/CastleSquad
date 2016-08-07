@@ -11,14 +11,12 @@ public class BattleUI : MonoBehaviour
 	void Awake()
 	{
 		instance = this;
+		BattleManager.instance.onStartPlayerPhase += StartPlayerPhase;
 	}
-
-	// Use this for initialization
-	void Start ()
+		
+	public void Start ()
 	{
 		topLabel = GameObject.Find("TopLabel");
-
-		BattleManager.instance.onStartPlayerPhase += StartPlayerPhase;
 	}
 
 	void StartPlayerPhase()

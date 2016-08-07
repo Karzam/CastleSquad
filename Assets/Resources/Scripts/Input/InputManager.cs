@@ -3,26 +3,27 @@ using System.Collections;
 
 public class InputManager : MonoBehaviour
 {
+	public static InputManager instance;
+
 	// Interacted object
 	GameObject interacted;
 
-	// Use this for initialization
-	void Start ()
+	public delegate void Event();
+	public event Event onTouchVoid;
+	
+	void Awake()
 	{
-	
+		instance = this;
 	}
-	
-	// Update is called once per frame
+
 	void Update ()
 	{
 		TouchEvent();
 		MouseEvent();
 	}
-
-	// Check for touch input
-	private void TouchEvent() {
-
-		// Touch 
+		
+	private void TouchEvent()
+	{
 		if (Input.touchCount > 0)
 		{
 			if (Input.GetTouch(0).phase == TouchPhase.Began) {
@@ -36,12 +37,14 @@ public class InputManager : MonoBehaviour
 
 	private void MouseEvent()
 	{
-		if (Input.GetMouseButtonDown(0)) {
-			beganTouchEvent(Input.mousePosition);
-		}
-		else if (Input.GetMouseButtonUp(0)) {
-			endedTouchEvent();
-		}
+		#if UNITY_EDITOR
+			if (Input.GetMouseButtonDown(0)) {
+				beganTouchEvent(Input.mousePosition);
+			}
+			else if (Input.GetMouseButtonUp(0)) {
+				endedTouchEvent();
+			}
+		#endif
 	}
 	
 	// Input start
@@ -58,7 +61,7 @@ public class InputManager : MonoBehaviour
 			hit.gameObject.BroadcastMessage("OnTouchDown");
 		}
 		else {
-			// No collider touched
+			onTouchVoid();
 		}
 	}
 	

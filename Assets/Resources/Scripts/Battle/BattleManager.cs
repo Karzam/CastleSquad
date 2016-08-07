@@ -16,7 +16,7 @@ public class BattleManager : MonoBehaviour
 	public enum Phase {Player, Enemy};
 
 	// Current battle phase
-	public Phase phase;
+	Phase phase;
 
 	void Awake()
 	{
@@ -26,7 +26,11 @@ public class BattleManager : MonoBehaviour
 	public void Start ()
 	{
 		MapManager.instance.InitializeMap();
+
+		BattleUI.instance.Start();
+
 		InstantiateCharacters();
+
 		StartPlayerPhase();
 	}
 
