@@ -30,7 +30,9 @@ public class Character : MonoBehaviour
 	 * Dropped   => Character just moved
 	 */
 	enum State {Idle, Selected, Dragged, Dropped};
-	State state;
+
+	// Contains all states of the turn
+	List<State> state;
 
 	// Positioning on tile
 	Vector2 tileOffset;
@@ -42,11 +44,13 @@ public class Character : MonoBehaviour
 	{
 		InputManager.instance.onTouchVoid += OnTouchVoid;
 
+		state = new List<State>();
+
 		sprite = transform.FindChild("Sprite").gameObject;
 
 		tileOffset = new Vector2(MapManager.TILE_SIZE / 2, 4);
 
-		state = State.Idle;
+		SetIdleState();
 
 		coordinates = startCoordinates;
 		SetPosition(coordinates);
@@ -64,46 +68,48 @@ public class Character : MonoBehaviour
 		
 	public void OnTouchDown()
 	{
-		if (state == State.Selected)
+		if (GetCurrentState() == State.Idle)
 		{
-			SetDraggedState();
-			print("dragged");
+			// Deselect other characters
+			foreach (GameObject character in CharacterManager.instance.playerSquad) {
+				character.GetComponent<Character>().SetIdleState();
+			}
+			if (!state.Contains(State.Dropped)) SetSelectedState(true);
+			else SetSelectedState(false);
+		}
+		else if (GetCurrentState() == State.Selected)
+		{
+			if (!state.Contains(State.Dropped)) SetDraggedState();
+			else SetIdleState();
+		}
+		else if (GetCurrentState() == State.Dropped)
+		{
+			SetSelectedState(false);
 		}
 	}
 
 	public void OnTouchUp()
 	{
-		if (state == State.Idle)
-		{
-			SetSelectedState();
-			print("selected");
-		}
-		else if (state == State.Selected)
-		{
-			SetDraggedState();
-			print("dragged");
-		}
-		// Releasing the character
-		if (state == State.Dragged)
+		if (GetCurrentState() == State.Dragged)
 		{
 			// If moved on available tile
 			MapManager.instance.DisableTilesHighlight();
 			if (GetMovingTiles().Contains(overflownCoordinates)) {
 				// Check if character selected
 				if (overflownCoordinates == coordinates) {
-					state = State.Selected;
+					SetSelectedState(true);
 					sprite.transform.eulerAngles = Vector3.zero;
 					SetPosition(coordinates);
 				}
 				else {
-					state = State.Dropped;
+					SetDroppedState();
 					sprite.transform.eulerAngles = Vector3.zero;
 					coordinates = overflownCoordinates;
 					SetPosition(coordinates);
 				}
 			}
 			else {
-				state = State.Idle;
+				SetIdleState();
 				sprite.transform.eulerAngles = Vector3.zero;
 				SetPosition(coordinates);
 			}
@@ -116,29 +122,34 @@ public class Character : MonoBehaviour
 		foreach (GameObject character in CharacterManager.instance.playerSquad) {
 			character.GetComponent<Character>().SetIdleState();
 		}
-		if (state == State.Selected)
+		if (GetCurrentState() == State.Selected)
 		{
 			SetIdleState();
 		}
 	}
 
+	State GetCurrentState()
+	{
+		return state[state.Count - 1];
+	}
+
 	void SetIdleState()
 	{
-		state = State.Idle;
+		state.Add(State.Idle);
 		CharacterHUD.instance.Hide();
 		MapManager.instance.DisableTilesHighlight();
 	}
 
-	void SetSelectedState()
+	void SetSelectedState(bool displayMovingTiles)
 	{
-		state = State.Selected;
-		MapManager.instance.EnableTilesHighlight(GetMovingTiles());
+		state.Add(State.Selected);
+		if (displayMovingTiles) MapManager.instance.EnableTilesHighlight(GetMovingTiles());
 		CharacterHUD.instance.Display(transform.position);
 	}
 
 	void SetDraggedState()
 	{
-		state = State.Dragged;
+		state.Add(State.Dragged);
 		dragUpdate = StartCoroutine(DragUpdate());
 		MapManager.instance.EnableTilesHighlight(GetMovingTiles());
 		CharacterHUD.instance.Hide();
@@ -146,7 +157,7 @@ public class Character : MonoBehaviour
 
 	void SetDroppedState()
 	{
-
+		state.Add(State.Dropped);
 	}
 
 	/*
@@ -160,7 +171,7 @@ public class Character : MonoBehaviour
 
 		for(;;)
 		{
-			if (state == State.Dragged) {
+			if (GetCurrentState() == State.Dragged) {
 				transform.position = new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x,
 												 Camera.main.ScreenToWorldPoint(Input.mousePosition).y - spriteHeight / 2, -1);
 				// Swing animation

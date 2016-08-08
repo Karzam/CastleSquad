@@ -29,9 +29,9 @@ public class CharacterHUD : MonoBehaviour
 
 	public void Display(Vector2 position)
 	{
-		buttonDetail.transform.position = new Vector3(position.x + 15, position.y - 10, -2);
+		buttonDetail.transform.position = new Vector3(position.x - 15, position.y - 10, -2);
 		buttonDetail.SetActive(true);
-		buttonFinish.transform.position = new Vector3(position.x - 15, position.y - 10, -2);
+		buttonFinish.transform.position = new Vector3(position.x + 15, position.y - 10, -2);
 		buttonFinish.SetActive(true);
 	}
 
