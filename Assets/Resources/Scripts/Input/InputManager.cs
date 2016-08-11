@@ -27,9 +27,11 @@ public class InputManager : MonoBehaviour
 		if (Input.touchCount > 0)
 		{
 			if (Input.GetTouch(0).phase == TouchPhase.Began) {
+				print("touchbegan");
 				beganTouchEvent(Input.GetTouch(0).position);
 			}
 			else if (Input.GetTouch(0).phase == TouchPhase.Ended) {
+				print("touchend");
 				endedTouchEvent();
 			}
 		}
@@ -48,8 +50,8 @@ public class InputManager : MonoBehaviour
 	}
 	
 	// Input start
-	private void beganTouchEvent(Vector3 touchPosition) {
-		
+	private void beganTouchEvent(Vector3 touchPosition)
+	{
 		Vector3 screenPoint = Camera.main.ScreenToWorldPoint(touchPosition);
 		
 		Vector2 touchPos = new Vector2(screenPoint.x, screenPoint.y);

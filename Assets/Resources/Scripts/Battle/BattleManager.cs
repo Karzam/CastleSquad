@@ -29,7 +29,7 @@ public class BattleManager : MonoBehaviour
 
 		BattleUI.instance.Start();
 
-		InstantiateCharacters();
+		InstantiatePlayerCharacters();
 
 		StartPlayerPhase();
 	}
@@ -37,9 +37,12 @@ public class BattleManager : MonoBehaviour
 	/*
 	 * Draw player and enemy squads
 	 */
-	void InstantiateCharacters()
+	void InstantiatePlayerCharacters()
 	{
-		CharacterManager.instance.InstantiatePlayerSquad();
+		Transform parent = GameObject.Find("Characters").transform;
+
+		GameObject thief = Instantiate(Resources.Load("Prefabs/Battle/Character"), parent) as GameObject;
+		thief.GetComponent<Character>().New("Ambu");
 	}
 
 	/*

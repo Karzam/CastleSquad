@@ -3,14 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 
 /**
- * Base class for all the characters
+ * Base class for all player characters
  * Contains interactions with the player
  */
 public class Character : MonoBehaviour
 {
-	// Character datas (stored here temporarily)
-	protected Vector2 startCoordinates;
-	protected int movementPoints;
+	public static List<GameObject> list = new List<GameObject>();
+
+	// Character data
+	CharacterData data;
+
+	int movementPoints;
+	Vector2 startCoordinates;
 
 	// Current model coordinates
 	Vector2 coordinates;
@@ -29,10 +33,13 @@ public class Character : MonoBehaviour
 	 * Dragged   => Player caught the character
 	 * Dropped   => Character just moved
 	 */
-	enum State {Idle, Selected, Dragged, Dropped};
+	public enum State {Idle, Selected, Dragged, Dropped};
 
-	// Contains all states of the turn
-	List<State> state;
+	// Current state
+	public State state;
+
+	// Moved ?
+	bool moved;
 
 	// Positioning on tile
 	Vector2 tileOffset;
@@ -40,20 +47,36 @@ public class Character : MonoBehaviour
 	// State update
 	Coroutine dragUpdate;
 
-	protected void Start ()
+	void Awake()
 	{
 		InputManager.instance.onTouchVoid += OnTouchVoid;
+	}
 
-		state = new List<State>();
+	public void New(string name)
+	{
+		list.Add(gameObject);
+
+		data = DataParser.GetCharacterData(name);
+		print(data.str);
 
 		sprite = transform.FindChild("Sprite").gameObject;
 
 		tileOffset = new Vector2(MapManager.TILE_SIZE / 2, 4);
 
-		SetIdleState();
+		coordinates = new Vector2(4, 3);
+		startCoordinates = coordinates;
 
-		coordinates = startCoordinates;
+		SetSprite();
 		SetPosition(coordinates);
+		SetIdleState();
+	}
+
+	/*
+	 * Assign sprite to the character
+	 */
+	void SetSprite()
+	{
+		sprite.GetComponent<SpriteRenderer>().sprite = Resources.Load("Sprites/Characters/Ambu") as Sprite;
 	}
 
 	/*
@@ -68,45 +91,42 @@ public class Character : MonoBehaviour
 		
 	public void OnTouchDown()
 	{
-		if (GetCurrentState() == State.Idle)
+		if (state == State.Idle)
 		{
 			// Deselect other characters
-			foreach (GameObject character in CharacterManager.instance.playerSquad) {
+			foreach (GameObject character in list) {
 				character.GetComponent<Character>().SetIdleState();
 			}
-			if (!state.Contains(State.Dropped)) SetSelectedState(true);
+			if (!moved) SetSelectedState(true);
 			else SetSelectedState(false);
 		}
-		else if (GetCurrentState() == State.Selected)
+		else if (state == State.Selected)
 		{
-			if (!state.Contains(State.Dropped)) SetDraggedState();
+			if (!moved) SetDraggedState();
 			else SetIdleState();
 		}
-		else if (GetCurrentState() == State.Dropped)
+		else if (state == State.Dropped)
 		{
 			SetSelectedState(false);
+		}
+
+		foreach (GameObject character in list) {
+			print(character.GetComponent<Character>().state);
 		}
 	}
 
 	public void OnTouchUp()
 	{
-		if (GetCurrentState() == State.Dragged)
+		if (state == State.Dragged)
 		{
 			// If moved on available tile
 			MapManager.instance.DisableTilesHighlight();
 			if (GetMovingTiles().Contains(overflownCoordinates)) {
-				// Check if character selected
-				if (overflownCoordinates == coordinates) {
-					SetSelectedState(true);
-					sprite.transform.eulerAngles = Vector3.zero;
-					SetPosition(coordinates);
-				}
-				else {
-					SetDroppedState();
-					sprite.transform.eulerAngles = Vector3.zero;
-					coordinates = overflownCoordinates;
-					SetPosition(coordinates);
-				}
+				SetDroppedState();
+				moved = true;
+				sprite.transform.eulerAngles = Vector3.zero;
+				coordinates = overflownCoordinates;
+				SetPosition(coordinates);
 			}
 			else {
 				SetIdleState();
@@ -119,37 +139,32 @@ public class Character : MonoBehaviour
 	void OnTouchVoid()
 	{
 		// Deselect other characters
-		foreach (GameObject character in CharacterManager.instance.playerSquad) {
+		foreach (GameObject character in list) {
 			character.GetComponent<Character>().SetIdleState();
 		}
-		if (GetCurrentState() == State.Selected)
+		if (state == State.Selected)
 		{
 			SetIdleState();
 		}
 	}
 
-	State GetCurrentState()
-	{
-		return state[state.Count - 1];
-	}
-
 	void SetIdleState()
 	{
-		state.Add(State.Idle);
+		state = State.Idle;
 		CharacterHUD.instance.Hide();
 		MapManager.instance.DisableTilesHighlight();
 	}
 
 	void SetSelectedState(bool displayMovingTiles)
 	{
-		state.Add(State.Selected);
+		state = State.Selected;
 		if (displayMovingTiles) MapManager.instance.EnableTilesHighlight(GetMovingTiles());
 		CharacterHUD.instance.Display(transform.position);
 	}
 
 	void SetDraggedState()
 	{
-		state.Add(State.Dragged);
+		state = State.Dragged;
 		dragUpdate = StartCoroutine(DragUpdate());
 		MapManager.instance.EnableTilesHighlight(GetMovingTiles());
 		CharacterHUD.instance.Hide();
@@ -157,7 +172,7 @@ public class Character : MonoBehaviour
 
 	void SetDroppedState()
 	{
-		state.Add(State.Dropped);
+		state = State.Dropped;
 	}
 
 	/*
@@ -171,7 +186,7 @@ public class Character : MonoBehaviour
 
 		for(;;)
 		{
-			if (GetCurrentState() == State.Dragged) {
+			if (state == State.Dragged) {
 				transform.position = new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x,
 												 Camera.main.ScreenToWorldPoint(Input.mousePosition).y - spriteHeight / 2, -1);
 				// Swing animation

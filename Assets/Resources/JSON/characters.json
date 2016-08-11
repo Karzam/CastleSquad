@@ -1,0 +1,61 @@
+﻿{
+	"Items":
+	[
+		{
+			"name": "Korri",
+			"type": "Knight",
+			"hp": 16,
+			"mp": 3,
+			"str": 10,
+			"def": 16,
+			"mag": 2,
+			"res": 6,
+			"skl_1": "",
+			"skl_2": "",
+			"skl_3": "",
+			"skl_4": ""
+		},
+		{
+			"name": "Orag",
+			"class": "Warrior",
+			"hp": 12,
+			"mp": 2,
+			"str": 18,
+			"def": 10,
+			"mag": 3,
+			"res": 7,
+			"skl_1": "",
+			"skl_2": "",
+			"skl_3": "",
+			"skl_4": ""
+		},
+		{
+			"name": "Ambu",
+			"class": "Sorcerer",
+			"hp": 14,
+			"mp": 3,
+			"str": 4,
+			"def": 8,
+			"mag": 12,
+			"res": 11,
+			"skl_1": "",
+			"skl_2": "",
+			"skl_3": "",
+			"skl_4": ""
+		},
+		{
+			"name": "Tyr",
+			"class": "Thief",
+			"hp": 14,
+			"mp": 4,
+			"str": 14,
+			"def": 9,
+			"mag": 8,
+			"res": 12,
+			"skl_1": "",
+			"skl_2": "",
+			"skl_3": "",
+			"skl_4": ""
+	    }
+	]
+}
