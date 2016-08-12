@@ -13,9 +13,6 @@ public class Character : MonoBehaviour
 	// Character data
 	CharacterData data;
 
-	int movementPoints;
-	Vector2 startCoordinates;
-
 	// Current model coordinates
 	Vector2 coordinates;
 
@@ -52,19 +49,17 @@ public class Character : MonoBehaviour
 		InputManager.instance.onTouchVoid += OnTouchVoid;
 	}
 
-	public void New(string name)
+	public void Initialize(string name, Vector2 startCoordinates)
 	{
 		list.Add(gameObject);
 
 		data = DataParser.GetCharacterData(name);
-		print(data.str);
 
 		sprite = transform.FindChild("Sprite").gameObject;
 
 		tileOffset = new Vector2(MapManager.TILE_SIZE / 2, 4);
 
-		coordinates = new Vector2(4, 3);
-		startCoordinates = coordinates;
+		coordinates = startCoordinates;
 
 		SetSprite();
 		SetPosition(coordinates);
@@ -76,7 +71,7 @@ public class Character : MonoBehaviour
 	 */
 	void SetSprite()
 	{
-		sprite.GetComponent<SpriteRenderer>().sprite = Resources.Load("Sprites/Characters/Ambu") as Sprite;
+		sprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Characters/" + data.name);
 	}
 
 	/*
@@ -93,10 +88,7 @@ public class Character : MonoBehaviour
 	{
 		if (state == State.Idle)
 		{
-			// Deselect other characters
-			foreach (GameObject character in list) {
-				character.GetComponent<Character>().SetIdleState();
-			}
+			DeselectAllCharacters();
 			if (!moved) SetSelectedState(true);
 			else SetSelectedState(false);
 		}
@@ -108,10 +100,6 @@ public class Character : MonoBehaviour
 		else if (state == State.Dropped)
 		{
 			SetSelectedState(false);
-		}
-
-		foreach (GameObject character in list) {
-			print(character.GetComponent<Character>().state);
 		}
 	}
 
@@ -138,13 +126,17 @@ public class Character : MonoBehaviour
 
 	void OnTouchVoid()
 	{
-		// Deselect other characters
-		foreach (GameObject character in list) {
-			character.GetComponent<Character>().SetIdleState();
-		}
+		DeselectAllCharacters();
 		if (state == State.Selected)
 		{
 			SetIdleState();
+		}
+	}
+
+	void DeselectAllCharacters()
+	{
+		foreach (GameObject character in list) {
+			character.GetComponent<Character>().SetIdleState();
 		}
 	}
 
@@ -222,14 +214,14 @@ public class Character : MonoBehaviour
 
 		foreach (Vector2 tile in MapManager.instance.model.Keys)
 		{
-			if (tile.x <= startCoordinates.x + movementPoints - (startCoordinates.y - tile.y) &&
-				tile.x <= startCoordinates.x + movementPoints - (tile.y - startCoordinates.y) &&
-				tile.x - startCoordinates.x >= 0) {
+			if (tile.x <= coordinates.x + data.mp - (coordinates.y - tile.y) &&
+				tile.x <= coordinates.x + data.mp - (tile.y - coordinates.y) &&
+				tile.x - coordinates.x >= 0) {
 				tiles.Add(tile);
 			}
-			if (tile.x >= startCoordinates.x - movementPoints - (startCoordinates.y - tile.y) &&
-				tile.x >= startCoordinates.x - movementPoints - (tile.y - startCoordinates.y) &&
-				tile.x - startCoordinates.x < 0) {
+			if (tile.x >= coordinates.x - data.mp - (coordinates.y - tile.y) &&
+				tile.x >= coordinates.x - data.mp - (tile.y - coordinates.y) &&
+				tile.x - coordinates.x < 0) {
 				tiles.Add(tile);
 			}
 		}

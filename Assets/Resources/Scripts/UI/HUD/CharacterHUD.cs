@@ -37,8 +37,11 @@ public class CharacterHUD : MonoBehaviour
 
 	public void Hide()
 	{
-		buttonDetail.SetActive(false);
-		buttonFinish.SetActive(false);
+		if (buttonDetail != null)
+		{
+			buttonDetail.SetActive(false);
+			buttonFinish.SetActive(false);
+		}
 	}
 
 }
