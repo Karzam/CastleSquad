@@ -151,7 +151,7 @@ public class Character : MonoBehaviour
 	{
 		state = State.Selected;
 		if (displayMovingTiles) MapManager.instance.EnableTilesHighlight(GetMovingTiles());
-		CharacterHUD.instance.Display(transform.position);
+		CharacterHUD.instance.Display(transform.position, data);
 	}
 
 	void SetDraggedState()

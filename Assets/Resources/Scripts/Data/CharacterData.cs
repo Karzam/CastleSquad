@@ -7,6 +7,7 @@ public class CharacterData
 {
 	public string name;
 	public string type;
+	public int level;
 	public int hp;
 	public int mp;
 	public int str;

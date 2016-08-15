@@ -4,6 +4,7 @@
 		{
 			"name": "Korri",
 			"type": "Knight",
+			"level": 1,
 			"hp": 16,
 			"mp": 3,
 			"str": 10,
@@ -18,6 +19,7 @@
 		{
 			"name": "Orag",
 			"class": "Warrior",
+			"level": 1,
 			"hp": 12,
 			"mp": 2,
 			"str": 18,
@@ -32,6 +34,7 @@
 		{
 			"name": "Ambu",
 			"class": "Sorcerer",
+			"level": 1,
 			"hp": 14,
 			"mp": 3,
 			"str": 4,
@@ -46,6 +49,7 @@
 		{
 			"name": "Tyr",
 			"class": "Thief",
+			"level": 1,
 			"hp": 14,
 			"mp": 4,
 			"str": 14,
