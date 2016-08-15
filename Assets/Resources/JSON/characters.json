@@ -18,7 +18,7 @@
 		},
 		{
 			"name": "Orag",
-			"class": "Warrior",
+			"type": "Warrior",
 			"level": 1,
 			"hp": 12,
 			"mp": 2,
@@ -33,7 +33,7 @@
 		},
 		{
 			"name": "Ambu",
-			"class": "Sorcerer",
+			"type": "Sorcerer",
 			"level": 1,
 			"hp": 14,
 			"mp": 3,
@@ -48,7 +48,7 @@
 		},
 		{
 			"name": "Tyr",
-			"class": "Thief",
+			"type": "Thief",
 			"level": 1,
 			"hp": 14,
 			"mp": 4,

@@ -27,11 +27,12 @@ public class CharacterHUD : MonoBehaviour
 		buttonFinish.SetActive(false);
 	}
 
-	public void Display(Vector2 position, CharacterData data)
+	public void Display(Vector2 position, GameObject character, CharacterData data)
 	{
 		buttonDetail.GetComponent<DetailButton>().SetData(data);
 		buttonDetail.transform.position = new Vector3(position.x - 15, position.y - 10, -2);
 		buttonDetail.SetActive(true);
+		buttonFinish.GetComponent<FinishButton>().SetCharacter(character);
 		buttonFinish.transform.position = new Vector3(position.x + 15, position.y - 10, -2);
 		buttonFinish.SetActive(true);
 	}

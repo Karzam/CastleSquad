@@ -29,8 +29,10 @@ public class Character : MonoBehaviour
 	 * Selected  => Player touched the character
 	 * Dragged   => Player caught the character
 	 * Dropped   => Character just moved
+	 * Attacked  => Character just attacked
+	 * Finished  => Finished playing
 	 */
-	public enum State {Idle, Selected, Dragged, Dropped};
+	public enum State {Idle, Selected, Dragged, Dropped, Attacked, Finished};
 
 	// Current state
 	public State state;
@@ -151,7 +153,7 @@ public class Character : MonoBehaviour
 	{
 		state = State.Selected;
 		if (displayMovingTiles) MapManager.instance.EnableTilesHighlight(GetMovingTiles());
-		CharacterHUD.instance.Display(transform.position, data);
+		CharacterHUD.instance.Display(transform.position, gameObject, data);
 	}
 
 	void SetDraggedState()
@@ -165,6 +167,12 @@ public class Character : MonoBehaviour
 	void SetDroppedState()
 	{
 		state = State.Dropped;
+	}
+
+	public void SetFinishState()
+	{
+		state = State.Finished;
+		sprite.GetComponent<SpriteRenderer>().color = new Color(0.2f, 0.2f, 0.2f, 0.8f);
 	}
 
 	/*
