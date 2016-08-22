@@ -1,0 +1,20 @@
+﻿{
+	"Items":
+	[
+		{
+			"name": "Goblin",
+			"type": "Warrior",
+			"level": 1,
+			"hp": 8,
+			"mp": 3,
+			"str": 12,
+			"def": 10,
+			"mag": 2,
+			"res": 6,
+			"skl_1": "",
+			"skl_2": "",
+			"skl_3": "",
+			"skl_4": ""
+	    }
+	]
+}

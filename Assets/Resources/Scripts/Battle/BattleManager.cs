@@ -30,33 +30,48 @@ public class BattleManager : MonoBehaviour
 		BattleUI.instance.Start();
 
 		InstantiatePlayerCharacters();
+		InstantiateEnemyCharacters();
+
 		StartPlayerPhase();
 	}
 
 	/*
-	 * Draw player and enemy squads
+	 * Draw player characters
 	 */
 	void InstantiatePlayerCharacters()
 	{
-		Dictionary<string, Vector2> playerCharacters = new Dictionary<string, Vector2>()
+		Dictionary<string, Vector2> characters = new Dictionary<string, Vector2>()
 		{
 			{"Tyr", new Vector2(2, 4)},
 			{"Ambu", new Vector2(4, 3)},
-			{"Orag", new Vector2(10, 1)},
+			{"Orag", new Vector2(3, 1)},
 			{"Korri", new Vector2(7, 4)}
 		};
 
-		foreach (var character in playerCharacters)
+		foreach (var character in characters)
 		{
-			InstantiateNewCharacter(character.Key, character.Value);
+			Transform parent = GameObject.Find("Characters").transform;
+			GameObject chara = Instantiate(Resources.Load("Prefabs/Battle/PlayerCharacter"), parent) as GameObject;
+			chara.GetComponent<Character>().Initialize(character.Key, character.Value);
 		}
 	}
 
-	void InstantiateNewCharacter(string name, Vector2 coordinates)
+	/*
+	 * Draw enemy characters
+	 */
+	void InstantiateEnemyCharacters()
 	{
-		Transform parent = GameObject.Find("Characters").transform;
-		GameObject character = Instantiate(Resources.Load("Prefabs/Battle/Character"), parent) as GameObject;
-		character.GetComponent<Character>().Initialize(name, coordinates);
+		Dictionary<string, Vector2> characters = new Dictionary<string, Vector2>()
+		{
+			{"Goblin_Warrior", new Vector2(11, 2)}
+		};
+
+		foreach (var character in characters)
+		{
+			Transform parent = GameObject.Find("Characters").transform;
+			GameObject chara = Instantiate(Resources.Load("Prefabs/Battle/EnemyCharacter"), parent) as GameObject;
+			chara.GetComponent<Character>().Initialize(character.Key, character.Value);
+		}
 	}
 
 	/*

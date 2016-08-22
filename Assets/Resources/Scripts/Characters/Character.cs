@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 /**
- * Base class for all player characters
+ * Base class for all characters
  * Contains interactions with the player
  */
 public class Character : MonoBehaviour
@@ -11,16 +11,13 @@ public class Character : MonoBehaviour
 	public static List<GameObject> list = new List<GameObject>();
 
 	// Character data
-	CharacterData data;
+	protected CharacterData data;
 
 	// Current model coordinates
-	Vector2 coordinates;
-
-	// Overflown coordinates when dragged
-	Vector2 overflownCoordinates = Vector2.zero;
+	protected Vector2 coordinates;
 
 	// Sprite child
-	GameObject sprite;
+	protected GameObject sprite;
 
 	/*
 	 * Current state of the character :
@@ -32,30 +29,22 @@ public class Character : MonoBehaviour
 	 * Attacked  => Character just attacked
 	 * Finished  => Finished playing
 	 */
-	public enum State {Idle, Selected, Dragged, Dropped, Attacked, Finished};
+	protected enum State {Idle, Selected, Dragged, Dropped, Attacked, Finished};
 
 	// Current state
-	public State state;
-
-	// Moved ?
-	bool moved;
+	protected State state;
 
 	// Positioning on tile
-	Vector2 tileOffset;
-
-	// State update
-	Coroutine dragUpdate;
+	protected Vector2 tileOffset;
 
 	void Awake()
 	{
 		InputManager.instance.onTouchVoid += OnTouchVoid;
 	}
 
-	public void Initialize(string name, Vector2 startCoordinates)
+	public virtual void Initialize(string name, Vector2 startCoordinates)
 	{
 		list.Add(gameObject);
-
-		data = DataParser.GetCharacterData(name);
 
 		sprite = transform.FindChild("Sprite").gameObject;
 
@@ -63,67 +52,26 @@ public class Character : MonoBehaviour
 
 		coordinates = startCoordinates;
 
-		SetSprite();
 		SetPosition(coordinates);
 		SetIdleState();
-	}
-
-	/*
-	 * Assign sprite to the character
-	 */
-	void SetSprite()
-	{
-		sprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Characters/" + data.name);
 	}
 
 	/*
 	 * Change position on the map
 	 * with new model coordinates
 	 */
-	void SetPosition(Vector2 position)
+	protected void SetPosition(Vector2 position)
 	{
 		transform.localPosition = new Vector3(MapManager.instance.GetViewCoordinates(coordinates).x + tileOffset.x,
 											  MapManager.instance.GetViewCoordinates(coordinates).y + tileOffset.y, -1);
 	}
-		
-	public void OnTouchDown()
+
+	protected virtual void OnTouchDown()
 	{
-		if (state == State.Idle)
-		{
-			DeselectAllCharacters();
-			if (!moved) SetSelectedState(true);
-			else SetSelectedState(false);
-		}
-		else if (state == State.Selected)
-		{
-			if (!moved) SetDraggedState();
-			else SetIdleState();
-		}
-		else if (state == State.Dropped)
-		{
-			SetSelectedState(false);
-		}
 	}
 
-	public void OnTouchUp()
+	protected virtual void OnTouchUp()
 	{
-		if (state == State.Dragged)
-		{
-			// If moved on available tile
-			MapManager.instance.DisableTilesHighlight();
-			if (GetMovingTiles().Contains(overflownCoordinates)) {
-				SetDroppedState();
-				moved = true;
-				sprite.transform.eulerAngles = Vector3.zero;
-				coordinates = overflownCoordinates;
-				SetPosition(coordinates);
-			}
-			else {
-				SetIdleState();
-				sprite.transform.eulerAngles = Vector3.zero;
-				SetPosition(coordinates);
-			}
-		}
 	}
 
 	void OnTouchVoid()
@@ -135,106 +83,36 @@ public class Character : MonoBehaviour
 		}
 	}
 
-	void DeselectAllCharacters()
+	protected void DeselectAllCharacters()
 	{
 		foreach (GameObject character in list) {
 			character.GetComponent<Character>().SetIdleState();
 		}
 	}
 
-	void SetIdleState()
+	protected virtual void SetIdleState()
 	{
 		state = State.Idle;
-		CharacterHUD.instance.Hide();
-		MapManager.instance.DisableTilesHighlight();
 	}
 
-	void SetSelectedState(bool displayMovingTiles)
+	protected virtual void SetSelectedState(bool displayMovingTiles)
 	{
 		state = State.Selected;
-		if (displayMovingTiles) MapManager.instance.EnableTilesHighlight(GetMovingTiles());
-		CharacterHUD.instance.Display(transform.position, gameObject, data);
 	}
 
-	void SetDraggedState()
+	protected virtual void SetDraggedState()
 	{
 		state = State.Dragged;
-		dragUpdate = StartCoroutine(DragUpdate());
-		MapManager.instance.EnableTilesHighlight(GetMovingTiles());
-		CharacterHUD.instance.Hide();
 	}
 
-	void SetDroppedState()
+	protected virtual void SetDroppedState()
 	{
 		state = State.Dropped;
 	}
 
-	public void SetFinishState()
+	public virtual void SetFinishState()
 	{
 		state = State.Finished;
-		sprite.GetComponent<SpriteRenderer>().color = new Color(0.2f, 0.2f, 0.2f, 0.8f);
-	}
-
-	/*
-	 * Update dragged character position and animation
-	 */
-	IEnumerator DragUpdate()
-	{
-		int direction = 1;
-		float spriteHeight = sprite.GetComponent<Renderer>().bounds.size.y;
-		Transform dragPoint = transform.FindChild("DragPoint").transform;
-
-		for(;;)
-		{
-			if (state == State.Dragged) {
-				transform.position = new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x,
-												 Camera.main.ScreenToWorldPoint(Input.mousePosition).y - spriteHeight / 2, -1);
-				// Swing animation
-				float angle = transform.FindChild("Sprite").localEulerAngles.z;
-				angle = (angle > 180) ? angle - 360 : angle;
-				if (angle > 6) {
-					direction = -1;
-				}
-				else if (angle < -6) {
-					direction = 1;
-				}
-				transform.FindChild("Sprite").RotateAround(dragPoint.position, Vector3.forward, Time.deltaTime * 40 * direction);
-				// Highlight current tile
-				Vector2 tileOverflown = MapManager.instance.GetModelCoordinates(transform.localPosition + new Vector3(0, 0, 0));
-				if (tileOverflown != overflownCoordinates) {
-					overflownCoordinates = tileOverflown;
-					MapManager.instance.TintTileHighlight(overflownCoordinates);
-				}
-			}
-			else {
-				StopCoroutine(dragUpdate);
-			}
-			yield return null;
-		}
-	}
-
-	/*
-	 * Returns the list of tiles position available to move
-	 */
-	List<Vector2> GetMovingTiles()
-	{
-		List<Vector2> tiles = new List<Vector2>();
-
-		foreach (Vector2 tile in MapManager.instance.model.Keys)
-		{
-			if (tile.x <= coordinates.x + data.mp - (coordinates.y - tile.y) &&
-				tile.x <= coordinates.x + data.mp - (tile.y - coordinates.y) &&
-				tile.x - coordinates.x >= 0) {
-				tiles.Add(tile);
-			}
-			if (tile.x >= coordinates.x - data.mp - (coordinates.y - tile.y) &&
-				tile.x >= coordinates.x - data.mp - (tile.y - coordinates.y) &&
-				tile.x - coordinates.x < 0) {
-				tiles.Add(tile);
-			}
-		}
-
-		return tiles;
 	}
 
 }
