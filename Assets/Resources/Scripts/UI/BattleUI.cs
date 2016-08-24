@@ -12,6 +12,7 @@ public class BattleUI : MonoBehaviour
 	{
 		instance = this;
 		BattleManager.instance.onStartPlayerPhase += StartPlayerPhase;
+		BattleManager.instance.onStartEnemyPhase += StartEnemyPhase;
 	}
 		
 	public void Start ()
@@ -25,9 +26,16 @@ public class BattleUI : MonoBehaviour
 		topLabel.GetComponent<Animation>().Play();
 	}
 
+	void StartEnemyPhase()
+	{
+		topLabel.GetComponent<Text>().text = "Enemy Phase";
+		topLabel.GetComponent<Animation>().Play();
+	}
+
 	void Destroy()
 	{
 		BattleManager.instance.onStartPlayerPhase -= StartPlayerPhase;
+		BattleManager.instance.onStartEnemyPhase -= StartEnemyPhase;
 	}
 }
 

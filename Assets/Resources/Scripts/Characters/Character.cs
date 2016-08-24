@@ -29,10 +29,10 @@ public class Character : MonoBehaviour
 	 * Attacked  => Character just attacked
 	 * Finished  => Finished playing
 	 */
-	protected enum State {Idle, Selected, Dragged, Dropped, Attacked, Finished};
+	public enum State {Idle, Selected, Dragged, Dropped, Attacked, Finished};
 
 	// Current state
-	protected State state;
+	public State state;
 
 	// Positioning on tile
 	protected Vector2 tileOffset;
@@ -86,7 +86,10 @@ public class Character : MonoBehaviour
 	protected void DeselectAllCharacters()
 	{
 		foreach (GameObject character in list) {
-			character.GetComponent<Character>().SetIdleState();
+			if (character.GetComponent<Character>().state != State.Finished)
+			{
+				character.GetComponent<Character>().SetIdleState();
+			}
 		}
 	}
 

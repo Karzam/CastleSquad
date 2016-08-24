@@ -12,6 +12,7 @@ public class BattleManager : MonoBehaviour
 	// UI broadcast
 	public delegate void UIEvent();
 	public event UIEvent onStartPlayerPhase;
+	public event UIEvent onStartEnemyPhase;
 
 	// Battle phases
 	public enum Phase {Player, Enemy};
@@ -19,9 +20,13 @@ public class BattleManager : MonoBehaviour
 	// Current battle phase
 	Phase phase;
 
+
 	void Awake()
 	{
 		instance = this;
+
+		CharacterManager.instance.onEndPlayerPhase += EndPlayerPhase;
+		CharacterManager.instance.onEndEnemyPhase += EndEnemyPhase;
 	}
 		
 	public void Start ()
@@ -81,6 +86,33 @@ public class BattleManager : MonoBehaviour
 	{
 		phase = Phase.Player;
 		onStartPlayerPhase();
+	}
+
+	/*
+	 * End player phase and
+	 * trigger enemy phase
+	 */
+	void EndPlayerPhase()
+	{
+		Invoke("StartEnemyPhase", 1);
+	}
+
+	/*
+	 * Trigger enemy phase
+	 */
+	void StartEnemyPhase()
+	{
+		phase = Phase.Enemy;
+		onStartEnemyPhase();
+	}
+
+	/*
+	 * End enemy phase and
+	 * trigger player phase
+	 */
+	void EndEnemyPhase()
+	{
+		Invoke("StartPlayerPhase", 1);
 	}
 }
 

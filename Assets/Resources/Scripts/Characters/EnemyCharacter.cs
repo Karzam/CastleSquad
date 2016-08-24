@@ -9,7 +9,6 @@ public class EnemyCharacter : Character
 {
 	public static List<GameObject> enemyList = new List<GameObject>();
 
-
 	// Use this for initialization
 	public override void Initialize(string name, Vector2 startCoordinates)
 	{
@@ -26,6 +25,10 @@ public class EnemyCharacter : Character
 	{
 		sprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Characters/" + data.name + "_" + data.type);
 		sprite.GetComponent<SpriteRenderer>().flipX = true;
+	}
+
+	public void Move()
+	{
 	}
 
 	protected override void OnTouchDown()
@@ -53,7 +56,7 @@ public class EnemyCharacter : Character
 	protected override void SetSelectedState(bool displayMovingTiles)
 	{
 		base.SetSelectedState(displayMovingTiles);
-		CharacterHUD.instance.Display(transform.position, gameObject, data);
+		CharacterHUD.instance.Display(transform.position, gameObject, data, false);
 	}
 
 	public override void SetFinishState()

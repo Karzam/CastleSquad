@@ -11,6 +11,9 @@ public class CharacterHUD : MonoBehaviour
 	GameObject buttonDetail;
 	GameObject buttonFinish;
 
+	bool isPlayerCharacter;
+
+
 	void Awake()
 	{
 		instance = this;
@@ -27,9 +30,9 @@ public class CharacterHUD : MonoBehaviour
 		buttonFinish.SetActive(false);
 	}
 
-	public void Display(Vector2 position, GameObject character, CharacterData data)
+	public void Display(Vector2 position, GameObject character, CharacterData data, bool isPlayerCharacter)
 	{
-		buttonDetail.GetComponent<DetailButton>().SetData(data);
+		buttonDetail.GetComponent<DetailButton>().SetData(data, isPlayerCharacter);
 		buttonDetail.transform.position = new Vector3(position.x - 15, position.y - 10, -2);
 		buttonDetail.SetActive(true);
 		buttonFinish.GetComponent<FinishButton>().SetCharacter(character);

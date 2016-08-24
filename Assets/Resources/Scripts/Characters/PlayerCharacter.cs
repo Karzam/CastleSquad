@@ -87,7 +87,7 @@ public class PlayerCharacter : Character
 	{
 		base.SetSelectedState(displayMovingTiles);
 		if (displayMovingTiles) MapManager.instance.EnableTilesHighlight(GetMovingTiles());
-		CharacterHUD.instance.Display(transform.position, gameObject, data);
+		CharacterHUD.instance.Display(transform.position, gameObject, data, true);
 	}
 
 	protected override void SetDraggedState()
@@ -109,6 +109,21 @@ public class PlayerCharacter : Character
 		sprite.GetComponent<SpriteRenderer>().color = new Color(0.2f, 0.2f, 0.2f, 0.8f);
 		CharacterHUD.instance.Hide();
 		MapManager.instance.DisableTilesHighlight();
+		CheckEndPhase();
+	}
+
+	/*
+	 * Check if all characters have finished
+	 */
+	void CheckEndPhase()
+	{
+		foreach(var character in playerList)
+		{
+			if (character.GetComponent<PlayerCharacter>().state != State.Finished) {
+				return;
+			}
+		}
+		CharacterManager.instance.EndPlayerPhase();
 	}
 
 	/*

@@ -5,11 +5,13 @@ public class DetailButton : Button
 {
 	GameObject detailPopup;
 
+	bool isPlayerCharacter;
 	CharacterData data;
 
-	public void SetData(CharacterData pData)
+	public void SetData(CharacterData pData, bool pIsPlayerCharacter)
 	{
 		data = pData;
+		isPlayerCharacter = pIsPlayerCharacter;
 	}
 
 	public void OnTouchDown()
@@ -23,7 +25,8 @@ public class DetailButton : Button
 
 		Transform parent = GameObject.Find("UI").transform;
 		detailPopup = Instantiate(Resources.Load("Prefabs/UI/Battle/PopupDetail"), parent) as GameObject;
-		detailPopup.GetComponent<DetailPopup>().Fill(data);
+		if (isPlayerCharacter) detailPopup.GetComponent<DetailPopup>().FillPlayerCharacterData(data);
+		else detailPopup.GetComponent<DetailPopup>().FillEnemyCharacterData(data);
 		CharacterHUD.instance.Hide();
 	}
 
