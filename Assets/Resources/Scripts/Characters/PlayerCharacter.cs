@@ -61,7 +61,7 @@ public class PlayerCharacter : Character
 		{
 			// If moved on available tile
 			MapManager.instance.DisableTilesHighlight();
-			if (GetMovingTiles().Contains(overflownCoordinates)) {
+			if (GetDestinationTiles().Contains(overflownCoordinates)) {
 				SetDroppedState();
 				moved = true;
 				sprite.transform.eulerAngles = Vector3.zero;
@@ -86,7 +86,7 @@ public class PlayerCharacter : Character
 	protected override void SetSelectedState(bool displayMovingTiles)
 	{
 		base.SetSelectedState(displayMovingTiles);
-		if (displayMovingTiles) MapManager.instance.EnableTilesHighlight(GetMovingTiles());
+		if (displayMovingTiles) MapManager.instance.EnableTilesHighlight(GetDestinationTiles());
 		CharacterHUD.instance.Display(transform.position, gameObject, data, true);
 	}
 
@@ -94,7 +94,7 @@ public class PlayerCharacter : Character
 	{
 		base.SetDraggedState();
 		dragUpdate = StartCoroutine(DragUpdate());
-		MapManager.instance.EnableTilesHighlight(GetMovingTiles());
+		MapManager.instance.EnableTilesHighlight(GetDestinationTiles());
 		CharacterHUD.instance.Hide();
 	}
 
@@ -162,30 +162,6 @@ public class PlayerCharacter : Character
 			}
 			yield return null;
 		}
-	}
-
-	/*
-	 * Returns the list of tiles position available to move
-	 */
-	List<Vector2> GetMovingTiles()
-	{
-		List<Vector2> tiles = new List<Vector2>();
-
-		foreach (Vector2 tile in MapManager.instance.model.Keys)
-		{
-			if (tile.x <= coordinates.x + data.mp - (coordinates.y - tile.y) &&
-				tile.x <= coordinates.x + data.mp - (tile.y - coordinates.y) &&
-				tile.x - coordinates.x >= 0) {
-				tiles.Add(tile);
-			}
-			if (tile.x >= coordinates.x - data.mp - (coordinates.y - tile.y) &&
-				tile.x >= coordinates.x - data.mp - (tile.y - coordinates.y) &&
-				tile.x - coordinates.x < 0) {
-				tiles.Add(tile);
-			}
-		}
-
-		return tiles;
 	}
 
 }

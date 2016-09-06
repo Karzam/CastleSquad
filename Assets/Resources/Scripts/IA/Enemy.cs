@@ -2,7 +2,7 @@
 using System.Collections;
 
 /*
- * Controls enemy characters
+ * IA which controls enemy characters
  */
 public class Enemy : MonoBehaviour
 {
@@ -10,17 +10,13 @@ public class Enemy : MonoBehaviour
 
 	void Awake()
 	{
+		instance = this;
 		BattleManager.instance.onStartEnemyPhase += StartEnemyPhase;
 	}
 
 	void StartEnemyPhase()
 	{
 		EnemyCharacter.enemyList[0].GetComponent<EnemyCharacter>().Move();
-	}
-
-	void Move()
-	{
-
 	}
 
 }

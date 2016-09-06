@@ -8,6 +8,7 @@ public class BattleUI : MonoBehaviour
 
 	GameObject topLabel;
 
+
 	void Awake()
 	{
 		instance = this;

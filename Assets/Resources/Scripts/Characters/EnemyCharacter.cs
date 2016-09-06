@@ -9,6 +9,8 @@ public class EnemyCharacter : Character
 {
 	public static List<GameObject> enemyList = new List<GameObject>();
 
+	int moveSpeed = 2;
+
 	// Use this for initialization
 	public override void Initialize(string name, Vector2 startCoordinates)
 	{
@@ -27,8 +29,78 @@ public class EnemyCharacter : Character
 		sprite.GetComponent<SpriteRenderer>().flipX = true;
 	}
 
+	/*
+	 * Move unit automatically
+	 */
 	public void Move()
 	{
+		List<Vector2> availableTiles = GetDestinationTiles();
+
+		Vector2 destTile = new Vector2(9, 3);
+
+		List<Vector2> pathTiles = GetTilesPath(destTile);
+
+		for (int i = 0; i < pathTiles.Count; i++)
+		{
+			StartCoroutine("MoveTranslation", pathTiles[i]);
+			print(pathTiles[i]);
+		}
+	}
+
+	/*
+	 * Returns an array of tiles path
+	 */
+	List<Vector2> GetTilesPath(Vector2 destTile)
+	{
+		List<Vector2> tilesPath = new List<Vector2>();
+
+		float distX = coordinates.x - destTile.x;
+		float distY = destTile.y - coordinates.y;
+
+		for (int x = 0; x <= distX; x++)
+		{
+			if (MapManager.instance.model[new Vector2(x, coordinates.y)] == null && x != 0)
+			{
+				tilesPath.Add(new Vector2(coordinates.x - x, coordinates.y));
+			}
+
+			if (Mathf.FloorToInt(distX) == x)
+			{
+				for (int y = 0; y <= distY; y++)
+				{
+					if (MapManager.instance.model[new Vector2(coordinates.x, y)] == null && y != 0)
+					{
+						tilesPath.Add(new Vector2(coordinates.x - x, coordinates.y + y));
+					}
+				}
+			}
+		}
+
+		return tilesPath;
+	}
+	
+	IEnumerator MoveTranslation(Vector2 destTile)
+	{
+		while (!CheckTilePosition(destTile))
+		{
+			transform.Translate(new Vector3(destTile.x, destTile.y, 0) * Time.deltaTime * 4);
+			yield return null;
+		}
+	}
+
+	/*
+	 * Return true if the character
+	 * is on the tile
+	 */
+	bool CheckTilePosition(Vector2 tile)
+	{
+		if (transform.localPosition.x == MapManager.instance.GetViewCoordinates(tile).x + tileOffset.x
+			&& transform.localPosition.y == MapManager.instance.GetViewCoordinates(tile).y + tileOffset.y)
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	protected override void OnTouchDown()

@@ -68,7 +68,7 @@ public class BattleManager : MonoBehaviour
 	{
 		Dictionary<string, Vector2> characters = new Dictionary<string, Vector2>()
 		{
-			{"Goblin_Warrior", new Vector2(11, 2)}
+			{"Goblin_Warrior", new Vector2(10, 2)}
 		};
 
 		foreach (var character in characters)

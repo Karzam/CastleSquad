@@ -32,12 +32,19 @@ public class CharacterHUD : MonoBehaviour
 
 	public void Display(Vector2 position, GameObject character, CharacterData data, bool isPlayerCharacter)
 	{
-		buttonDetail.GetComponent<DetailButton>().SetData(data, isPlayerCharacter);
-		buttonDetail.transform.position = new Vector3(position.x - 15, position.y - 10, -2);
-		buttonDetail.SetActive(true);
-		buttonFinish.GetComponent<FinishButton>().SetCharacter(character);
-		buttonFinish.transform.position = new Vector3(position.x + 15, position.y - 10, -2);
-		buttonFinish.SetActive(true);
+		if (isPlayerCharacter) {
+			buttonDetail.GetComponent<DetailButton>().SetData(data, isPlayerCharacter);
+			buttonDetail.transform.position = new Vector3(position.x - 15, position.y - 10, -2);
+			buttonDetail.SetActive(true);
+			buttonFinish.GetComponent<FinishButton>().SetCharacter(character);
+			buttonFinish.transform.position = new Vector3(position.x + 15, position.y - 10, -2);
+			buttonFinish.SetActive(true);
+		}
+		else {
+			buttonDetail.GetComponent<DetailButton>().SetData(data, isPlayerCharacter);
+			buttonDetail.transform.position = new Vector3(position.x, position.y - 12, -2);
+			buttonDetail.SetActive(true);
+		}
 	}
 
 	public void Hide()

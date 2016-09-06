@@ -83,6 +83,9 @@ public class Character : MonoBehaviour
 		}
 	}
 
+	/*
+	 * Set all characters selected to idle state
+	 */
 	protected void DeselectAllCharacters()
 	{
 		foreach (GameObject character in list) {
@@ -91,6 +94,30 @@ public class Character : MonoBehaviour
 				character.GetComponent<Character>().SetIdleState();
 			}
 		}
+	}
+
+	/*
+	 * Returns the list of tiles position available to move
+	 */
+	protected List<Vector2> GetDestinationTiles()
+	{
+		List<Vector2> tiles = new List<Vector2>();
+
+		foreach (Vector2 tile in MapManager.instance.model.Keys)
+		{
+			if (tile.x <= coordinates.x + data.mp - (coordinates.y - tile.y) &&
+				tile.x <= coordinates.x + data.mp - (tile.y - coordinates.y) &&
+				tile.x - coordinates.x >= 0) {
+				tiles.Add(tile);
+			}
+			if (tile.x >= coordinates.x - data.mp - (coordinates.y - tile.y) &&
+				tile.x >= coordinates.x - data.mp - (tile.y - coordinates.y) &&
+				tile.x - coordinates.x < 0) {
+				tiles.Add(tile);
+			}
+		}
+
+		return tiles;
 	}
 
 	protected virtual void SetIdleState()
