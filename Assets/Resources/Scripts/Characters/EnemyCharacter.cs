@@ -9,7 +9,9 @@ public class EnemyCharacter : Character
 {
 	public static List<GameObject> enemyList = new List<GameObject>();
 
-	int moveSpeed = 2;
+	int moveSpeed = 100;
+
+	List<Vector2> pathTiles;
 
 	// Use this for initialization
 	public override void Initialize(string name, Vector2 startCoordinates)
@@ -35,15 +37,33 @@ public class EnemyCharacter : Character
 	public void Move()
 	{
 		List<Vector2> availableTiles = GetDestinationTiles();
+		Vector2 destTile = availableTiles[4];
+		pathTiles = GetTilesPath(destTile);
+		StartCoroutine(MoveTranslation());
+	}
 
-		Vector2 destTile = new Vector2(9, 3);
+	IEnumerator MoveTranslation()
+	{
+		Vector2 tile = pathTiles[0];
 
-		List<Vector2> pathTiles = GetTilesPath(destTile);
-
-		for (int i = 0; i < pathTiles.Count; i++)
+		for(;;)
 		{
-			StartCoroutine("MoveTranslation", pathTiles[i]);
-			print(pathTiles[i]);
+			if (!CheckTilePosition(tile))
+			{
+				transform.localPosition = Vector3.MoveTowards(transform.localPosition, new Vector3(MapManager.instance.GetViewCoordinates(tile).x + tileOffset.x,
+					MapManager.instance.GetViewCoordinates(tile).y + tileOffset.y, 0), moveSpeed * Time.deltaTime);
+			}
+			if (Vector3.Distance(transform.localPosition, new Vector3(MapManager.instance.GetViewCoordinates(tile).x + tileOffset.x,
+				MapManager.instance.GetViewCoordinates(tile).y + tileOffset.y, 0)) == 0)
+			{
+				pathTiles.Remove(tile);
+				StopAllCoroutines();
+				if (pathTiles.Count != 0)
+				{
+					StartCoroutine(MoveTranslation());
+				}
+			}
+			yield return null;
 		}
 	}
 
@@ -57,11 +77,17 @@ public class EnemyCharacter : Character
 		float distX = coordinates.x - destTile.x;
 		float distY = destTile.y - coordinates.y;
 
+		bool distXNeg = (coordinates.x - destTile.x < 0);
+		bool distYNeg = (destTile.y - coordinates.y < 0);
+
+		if (distX < 0) distX *= -1;
+		if (distY < 0) distY *= -1;
+
 		for (int x = 0; x <= distX; x++)
 		{
 			if (MapManager.instance.model[new Vector2(x, coordinates.y)] == null && x != 0)
 			{
-				tilesPath.Add(new Vector2(coordinates.x - x, coordinates.y));
+				tilesPath.Add(new Vector2(coordinates.x - x * (distXNeg ? -1 : 1), coordinates.y));
 			}
 
 			if (Mathf.FloorToInt(distX) == x)
@@ -70,7 +96,7 @@ public class EnemyCharacter : Character
 				{
 					if (MapManager.instance.model[new Vector2(coordinates.x, y)] == null && y != 0)
 					{
-						tilesPath.Add(new Vector2(coordinates.x - x, coordinates.y + y));
+						tilesPath.Add(new Vector2(coordinates.x - x * (distXNeg ? -1 : 1), coordinates.y + y * (distYNeg ? -1 : 1)));
 					}
 				}
 			}
@@ -78,24 +104,15 @@ public class EnemyCharacter : Character
 
 		return tilesPath;
 	}
-	
-	IEnumerator MoveTranslation(Vector2 destTile)
-	{
-		while (!CheckTilePosition(destTile))
-		{
-			transform.Translate(new Vector3(destTile.x, destTile.y, 0) * Time.deltaTime * 4);
-			yield return null;
-		}
-	}
 
 	/*
 	 * Return true if the character
 	 * is on the tile
 	 */
-	bool CheckTilePosition(Vector2 tile)
+	bool CheckTilePosition(Vector2 destTile)
 	{
-		if (transform.localPosition.x == MapManager.instance.GetViewCoordinates(tile).x + tileOffset.x
-			&& transform.localPosition.y == MapManager.instance.GetViewCoordinates(tile).y + tileOffset.y)
+		if (transform.localPosition.x == MapManager.instance.GetViewCoordinates(destTile).x + tileOffset.x
+			&& transform.localPosition.y == MapManager.instance.GetViewCoordinates(destTile).y + tileOffset.y)
 		{
 			return true;
 		}
