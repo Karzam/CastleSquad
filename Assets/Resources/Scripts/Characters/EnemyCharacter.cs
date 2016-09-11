@@ -145,7 +145,7 @@ public class EnemyCharacter : Character
 	protected override void SetSelectedState(bool displayMovingTiles)
 	{
 		base.SetSelectedState(displayMovingTiles);
-		CharacterHUD.instance.Display(transform.position, gameObject, data, false);
+		HUDManager.instance.DisplayCharacterHUD(transform.position, gameObject, data, false);
 	}
 
 	public override void SetFinishState()

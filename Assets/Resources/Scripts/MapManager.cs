@@ -47,7 +47,7 @@ public class MapManager : MonoBehaviour
 	public void InitializeMap()
 	{
 		GameObject map = Instantiate(grassMap, GameObject.Find("Map").transform) as GameObject;
-		map.transform.position = new Vector3(-156, 54, 0);
+		map.transform.position = new Vector3(-156, 66.9f, 0);
 
 		model = new Dictionary<Vector2, GameObject>();
 

@@ -27,7 +27,7 @@ public class DetailButton : Button
 		detailPopup = Instantiate(Resources.Load("Prefabs/UI/Battle/PopupDetail"), parent) as GameObject;
 		if (isPlayerCharacter) detailPopup.GetComponent<DetailPopup>().FillPlayerCharacterData(data);
 		else detailPopup.GetComponent<DetailPopup>().FillEnemyCharacterData(data);
-		CharacterHUD.instance.Hide();
+		HUDManager.instance.HideCharacterHUD();
 	}
 
 }

@@ -12,7 +12,7 @@ public class DataParser : MonoBehaviour
 	 */
 	public static CharacterData GetPlayerCharacterData(string name)
 	{
-		using (StreamReader file = new StreamReader("Assets/Resources/JSON/player_characters.json"))
+		using (StreamReader file = new StreamReader(Application.dataPath + "Assets/Resources/JSON/player_characters.json"))
 		{
 			string json = file.ReadToEnd();
 			CharacterData[] characters = JsonHelper.FromJson<CharacterData>(json);
@@ -33,7 +33,7 @@ public class DataParser : MonoBehaviour
 	 */
 	public static CharacterData GetEnemyCharacterData(string name)
 	{
-		using (StreamReader file = new StreamReader("Assets/Resources/JSON/enemy_characters.json"))
+		using (StreamReader file = new StreamReader(Application.dataPath + "Assets/Resources/JSON/enemy_characters.json"))
 		{
 			string json = file.ReadToEnd();
 			CharacterData[] characters = JsonHelper.FromJson<CharacterData>(json);

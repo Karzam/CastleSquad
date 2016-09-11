@@ -79,7 +79,7 @@ public class PlayerCharacter : Character
 	protected override void SetIdleState()
 	{
 		base.SetIdleState();
-		CharacterHUD.instance.Hide();
+		HUDManager.instance.HideCharacterHUD();
 		MapManager.instance.DisableTilesHighlight();
 	}
 
@@ -87,7 +87,7 @@ public class PlayerCharacter : Character
 	{
 		base.SetSelectedState(displayMovingTiles);
 		if (displayMovingTiles) MapManager.instance.EnableTilesHighlight(GetDestinationTiles());
-		CharacterHUD.instance.Display(transform.position, gameObject, data, true);
+		HUDManager.instance.DisplayCharacterHUD(transform.position, gameObject, data, true);
 	}
 
 	protected override void SetDraggedState()
@@ -95,7 +95,7 @@ public class PlayerCharacter : Character
 		base.SetDraggedState();
 		dragUpdate = StartCoroutine(DragUpdate());
 		MapManager.instance.EnableTilesHighlight(GetDestinationTiles());
-		CharacterHUD.instance.Hide();
+		HUDManager.instance.HideCharacterHUD();
 	}
 
 	protected override void SetDroppedState()
@@ -107,7 +107,7 @@ public class PlayerCharacter : Character
 	{
 		base.SetFinishState();
 		sprite.GetComponent<SpriteRenderer>().color = new Color(0.2f, 0.2f, 0.2f, 0.8f);
-		CharacterHUD.instance.Hide();
+		HUDManager.instance.HideCharacterHUD();
 		MapManager.instance.DisableTilesHighlight();
 		CheckEndPhase();
 	}

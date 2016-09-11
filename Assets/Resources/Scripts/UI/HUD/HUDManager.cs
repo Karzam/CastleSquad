@@ -2,12 +2,13 @@
 using System.Collections;
 
 /**
- * Display buttons off character selected
+ * Manage all HUDs (characters buttons etc...)
  */
-public class CharacterHUD : MonoBehaviour
+public class HUDManager : MonoBehaviour
 {
-	public static CharacterHUD instance;
+	public static HUDManager instance;
 
+	GameObject characterSelectedHUD;
 	GameObject buttonDetail;
 	GameObject buttonFinish;
 
@@ -23,6 +24,9 @@ public class CharacterHUD : MonoBehaviour
 	{
 		Transform parent = GameObject.Find("UI").transform;
 
+		characterSelectedHUD = Instantiate(Resources.Load("Prefabs/UI/Battle/CharacterSelectedHUD"), parent) as GameObject;
+		characterSelectedHUD.SetActive(false);
+
 		buttonDetail = Instantiate(Resources.Load("Prefabs/UI/Battle/ButtonDetail"), parent) as GameObject;
 		buttonDetail.SetActive(false);
 
@@ -30,29 +34,36 @@ public class CharacterHUD : MonoBehaviour
 		buttonFinish.SetActive(false);
 	}
 
-	public void Display(Vector2 position, GameObject character, CharacterData data, bool isPlayerCharacter)
+	public void DisplayCharacterHUD(Vector2 position, GameObject character, CharacterData data, bool isPlayerCharacter)
 	{
-		if (isPlayerCharacter) {
+		characterSelectedHUD.GetComponent<CharacterSelectedHUD>().SetData(data, isPlayerCharacter);
+		characterSelectedHUD.SetActive(true);
+
+		if (isPlayerCharacter)
+		{
 			buttonDetail.GetComponent<DetailButton>().SetData(data, isPlayerCharacter);
 			buttonDetail.transform.position = new Vector3(position.x - 15, position.y - 10, -2);
 			buttonDetail.SetActive(true);
+
 			buttonFinish.GetComponent<FinishButton>().SetCharacter(character);
 			buttonFinish.transform.position = new Vector3(position.x + 15, position.y - 10, -2);
 			buttonFinish.SetActive(true);
 		}
-		else {
+		else
+		{
 			buttonDetail.GetComponent<DetailButton>().SetData(data, isPlayerCharacter);
 			buttonDetail.transform.position = new Vector3(position.x, position.y - 12, -2);
 			buttonDetail.SetActive(true);
 		}
 	}
 
-	public void Hide()
+	public void HideCharacterHUD()
 	{
 		if (buttonDetail != null)
 		{
 			buttonDetail.SetActive(false);
 			buttonFinish.SetActive(false);
+			characterSelectedHUD.SetActive(false);
 		}
 	}
 
