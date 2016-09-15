@@ -12,20 +12,16 @@ public class DataParser : MonoBehaviour
 	 */
 	public static CharacterData GetPlayerCharacterData(string name)
 	{
-		//using (StreamReader file = new StreamReader("Assets/Resources/JSON/player_characters.json"))
-		//{
-		string json = Resources.Load<TextAsset>("JSON/player_characters").text;
-			//string json = file.ReadToEnd();
-			CharacterData[] characters = JsonHelper.FromJson<CharacterData>(json);
+		string json = Resources.Load<TextAsset>("Scripts/JSON/player_characters").text;
+		CharacterData[] characters = JsonHelper.FromJson<CharacterData>(json);
 
-			foreach (var character in characters)
-			{
-				if (character.name == name) {
-					return character;
-				}
+		foreach (var character in characters)
+		{
+			if (character.name == name) {
+				return character;
 			}
-			return null;
-		//}
+		}
+		return null;
 	}
 
 	/*
@@ -34,20 +30,16 @@ public class DataParser : MonoBehaviour
 	 */
 	public static CharacterData GetEnemyCharacterData(string name)
 	{
-		//using (StreamReader file = new StreamReader(Application.dataPath + "Assets/Resources/JSON/enemy_characters.json"))
-		//{
-		string json = Resources.Load<TextAsset>("JSON/enemy_characters").text;
-			//string json = file.ReadToEnd();
-			CharacterData[] characters = JsonHelper.FromJson<CharacterData>(json);
+		string json = Resources.Load<TextAsset>("Scripts/JSON/enemy_characters").text;
+		CharacterData[] characters = JsonHelper.FromJson<CharacterData>(json);
 
-			foreach (var character in characters)
-			{
-				if (character.name == name) {
-					return character;
-				}
+		foreach (var character in characters)
+		{
+			if (character.name == name) {
+				return character;
 			}
-			return null;
-		//}
+		}
+		return null;
 	}
 
 }

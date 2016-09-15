@@ -6,9 +6,8 @@ using System.Collections;
 public class SkillData
 {
 	/*
-	 * Range types :
-	 * - Full, Cross, Away
-	 * 
+	 * Range types => Full, Cross, Away
+ 	 * Zone types => Cross, Square, Line
 	 */
 
 	public string name;
@@ -20,6 +19,17 @@ public class SkillData
 	public string zoneType;
 	public int zoneRange;
 	public int damage;
+	public int heal;
 	public int durationDamage;
 	public int durationHeal;
+	public int mpDecrease;
+	public int strDecrease;
+	public int defDecrease;
+	public int magDecrease;
+	public int resDecrease;
+	public int mpIncrease;
+	public int strIncrease;
+	public int defIncrease;
+	public int magIncrease;
+	public int resIncrease;
 }

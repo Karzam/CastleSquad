@@ -41,10 +41,10 @@
 			"def": 8,
 			"mag": 12,
 			"res": 11,
-			"skl_1": "",
-			"skl_2": "",
-			"skl_3": "",
-			"skl_4": ""
+			"skl_1": "Blaze",
+			"skl_2": "Care",
+			"skl_3": "Withering",
+			"skl_4": "Curse"
 		},
 		{
 			"name": "Tyr",
