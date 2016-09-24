@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CloseButton : Button
+public class CloseButton : ButtonElement
 {
 
-	public void OnTouchDown()
+	public override void OnMouseDown()
 	{
-		base.OnTouchDown();
+		base.OnMouseDown();
 	}
 
-	public void OnTouchUp()
+	public override void OnMouseUp()
 	{
-		base.OnTouchUp();
+		base.OnMouseUp();
 
 		transform.parent.GetComponent<DetailPopup>().Close();
 	}

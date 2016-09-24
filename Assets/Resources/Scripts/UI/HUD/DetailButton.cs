@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DetailButton : Button
+public class DetailButton : ButtonElement
 {
 	GameObject detailPopup;
 
@@ -14,14 +14,14 @@ public class DetailButton : Button
 		isPlayerCharacter = pIsPlayerCharacter;
 	}
 
-	public void OnTouchDown()
+	public override void OnMouseDown()
 	{
-		base.OnTouchDown();
+		base.OnMouseDown();
 	}
 
-	public void OnTouchUp()
+	public override void OnMouseUp()
 	{
-		base.OnTouchUp();
+		base.OnMouseUp();
 
 		Transform parent = GameObject.Find("UI").transform;
 		detailPopup = Instantiate(Resources.Load("Prefabs/UI/Battle/PopupDetail"), parent) as GameObject;

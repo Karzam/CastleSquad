@@ -120,7 +120,7 @@ public class EnemyCharacter : Character
 		return false;
 	}
 
-	protected override void OnTouchDown()
+	public override void OnMouseDown()
 	{
 		if (state == State.Idle)
 		{
@@ -133,7 +133,7 @@ public class EnemyCharacter : Character
 		}
 	}
 
-	protected override void OnTouchUp()
+	public override void OnMouseUp()
 	{
 	}
 

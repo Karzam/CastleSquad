@@ -36,7 +36,7 @@ public class PlayerCharacter : Character
 		sprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Characters/" + data.name);
 	}
 
-	protected override void OnTouchDown()
+	public override void OnMouseDown()
 	{
 		if (state == State.Idle)
 		{
@@ -55,7 +55,7 @@ public class PlayerCharacter : Character
 		}
 	}
 
-	protected override void OnTouchUp()
+	public override void OnMouseUp()
 	{
 		if (state == State.Dragged)
 		{
@@ -80,6 +80,7 @@ public class PlayerCharacter : Character
 	{
 		base.SetIdleState();
 		HUDManager.instance.HideCharacterHUD();
+		HUDManager.instance.HideSkillsBar();
 		MapManager.instance.DisableTilesHighlight();
 	}
 
@@ -88,6 +89,7 @@ public class PlayerCharacter : Character
 		base.SetSelectedState(displayMovingTiles);
 		if (displayMovingTiles) MapManager.instance.EnableTilesHighlight(GetDestinationTiles());
 		HUDManager.instance.DisplayCharacterHUD(transform.position, gameObject, data, true);
+		HUDManager.instance.DisplaySkillsBar(gameObject, data);
 	}
 
 	protected override void SetDraggedState()
@@ -108,6 +110,7 @@ public class PlayerCharacter : Character
 		base.SetFinishState();
 		sprite.GetComponent<SpriteRenderer>().color = new Color(0.2f, 0.2f, 0.2f, 0.8f);
 		HUDManager.instance.HideCharacterHUD();
+		HUDManager.instance.HideSkillsBar();
 		MapManager.instance.DisableTilesHighlight();
 		CheckEndPhase();
 	}

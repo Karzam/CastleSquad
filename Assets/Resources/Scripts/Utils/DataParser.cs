@@ -42,5 +42,23 @@ public class DataParser : MonoBehaviour
 		return null;
 	}
 
+	/*
+	 * Get skill name and return 
+	 * a data object with all stats
+	 */
+	public static SkillData GetSkillData(string name)
+	{
+		string json = Resources.Load<TextAsset>("Scripts/JSON/player_skills").text;
+		SkillData[] skills = JsonHelper.FromJson<SkillData>(json);
+
+		foreach (var skill in skills)
+		{
+			if (skill.name == name) {
+				return skill;
+			}
+		}
+		return null;
+	}
+
 }
 

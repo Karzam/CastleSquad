@@ -4,13 +4,13 @@ using System.Collections;
 public class TitleScreen : MonoBehaviour {
 
 	// Bouton play  
-	private Button play;
+	private ButtonElement play;
 
 	// Bouton de settings 
-	private Button settings;
+	private ButtonElement settings;
 
 	// Bouton google play  
-	private Button googlePlay;
+	private ButtonElement googlePlay;
 
 	// Use this for initialization
 	void Start ()

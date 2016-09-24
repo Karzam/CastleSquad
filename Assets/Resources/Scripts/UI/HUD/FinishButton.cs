@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FinishButton : Button
+public class FinishButton : ButtonElement
 {
 	GameObject character;
 
@@ -10,14 +10,14 @@ public class FinishButton : Button
 		character = pCharacter;
 	}
 
-	public void OnTouchDown()
+	public override void OnMouseDown()
 	{
-		base.OnTouchDown();
+		base.OnMouseDown();
 	}
 
-	public void OnTouchUp()
+	public override void OnMouseUp()
 	{
-		base.OnTouchUp();
+		base.OnMouseUp();
 
 		character.GetComponent<Character>().SetFinishState();
 	}

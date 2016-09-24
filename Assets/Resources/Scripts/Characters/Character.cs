@@ -6,7 +6,7 @@ using System.Collections.Generic;
  * Base class for all characters
  * Contains interactions with the player
  */
-public class Character : MonoBehaviour
+public class Character : ButtonElement
 {
 	public static List<GameObject> list = new List<GameObject>();
 
@@ -14,7 +14,7 @@ public class Character : MonoBehaviour
 	protected CharacterData data;
 
 	// Current model coordinates
-	protected Vector2 coordinates;
+	public Vector2 coordinates;
 
 	// Sprite child
 	protected GameObject sprite;
@@ -66,12 +66,14 @@ public class Character : MonoBehaviour
 											  MapManager.instance.GetViewCoordinates(coordinates).y + tileOffset.y, -1);
 	}
 
-	protected virtual void OnTouchDown()
+	public override void OnMouseDown()
 	{
+		base.OnMouseDown();
 	}
 
-	protected virtual void OnTouchUp()
+	public override void OnMouseUp()
 	{
+		base.OnMouseUp();
 	}
 
 	void OnTouchVoid()
@@ -116,6 +118,8 @@ public class Character : MonoBehaviour
 				tiles.Add(tile);
 			}
 		}
+
+		tiles.Remove(new Vector2(coordinates.x, coordinates.y));
 
 		return tiles;
 	}

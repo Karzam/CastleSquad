@@ -9,6 +9,7 @@ public class HUDManager : MonoBehaviour
 	public static HUDManager instance;
 
 	GameObject characterSelectedHUD;
+	GameObject skillsBar;
 	GameObject buttonDetail;
 	GameObject buttonFinish;
 
@@ -26,6 +27,9 @@ public class HUDManager : MonoBehaviour
 
 		characterSelectedHUD = Instantiate(Resources.Load("Prefabs/UI/Battle/CharacterSelectedHUD"), parent) as GameObject;
 		characterSelectedHUD.SetActive(false);
+
+		skillsBar = Instantiate(Resources.Load("Prefabs/UI/Battle/SkillsBar"), parent) as GameObject;
+		skillsBar.SetActive(false);
 
 		buttonDetail = Instantiate(Resources.Load("Prefabs/UI/Battle/ButtonDetail"), parent) as GameObject;
 		buttonDetail.SetActive(false);
@@ -64,6 +68,20 @@ public class HUDManager : MonoBehaviour
 			buttonDetail.SetActive(false);
 			buttonFinish.SetActive(false);
 			characterSelectedHUD.SetActive(false);
+		}
+	}
+
+	public void DisplaySkillsBar(GameObject character, CharacterData data)
+	{
+		skillsBar.GetComponent<SkillsBar>().SetData(data, character.GetComponent<Character>().coordinates);
+		skillsBar.SetActive(true);
+	}
+
+	public void HideSkillsBar()
+	{
+		if (skillsBar != null)
+		{
+			skillsBar.SetActive(false);
 		}
 	}
 

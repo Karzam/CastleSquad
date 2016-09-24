@@ -10,16 +10,10 @@ public class MapManager : MonoBehaviour
 {
 	public static MapManager instance;
 
-	[SerializeField]
-	GameObject grassMap;
-
-	[SerializeField]
-	GameObject highlightedTile;
-
-	[SerializeField]
+	// Tiles highlight sprites
 	Sprite highlightSprite;
-
-	[SerializeField]
+	Sprite targetHighlightSprite;
+	Sprite moveHighlightSprite;
 	Sprite selectedSprite;
 
 	// Coordinates map
@@ -39,6 +33,9 @@ public class MapManager : MonoBehaviour
 
 	void Start ()
 	{
+		moveHighlightSprite = Resources.Load<Sprite>("Sprites/Tiles/MoveHighlight") as Sprite;
+		targetHighlightSprite = Resources.Load<Sprite>("Sprites/Tiles/TargetHighlight") as Sprite;
+		selectedSprite = Resources.Load<Sprite>("Sprites/Tiles/SelectedHighlight") as Sprite;
 	}
 
 	/*
@@ -46,6 +43,8 @@ public class MapManager : MonoBehaviour
 	 */
 	public void InitializeMap()
 	{
+		GameObject grassMap = Resources.Load<GameObject>("Prefabs/Maps/Grass") as GameObject;
+		grassMap.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Maps/grass_map");
 		GameObject map = Instantiate(grassMap, GameObject.Find("Map").transform) as GameObject;
 		map.transform.position = new Vector3(-156, 66.9f, 0);
 
@@ -79,13 +78,17 @@ public class MapManager : MonoBehaviour
 	/*
 	 * Set highlight on tiles available to move
 	 */
-	public void EnableTilesHighlight(List<Vector2> tiles)
+	public void EnableTilesHighlight(List<Vector2> tiles, bool isTargetTiles = false)
 	{
 		Transform parent = GameObject.Find("Map").transform;
 
+		highlightSprite = (isTargetTiles ? targetHighlightSprite : moveHighlightSprite);
+		GameObject lHighlight = Resources.Load<GameObject>("Prefabs/Tiles/HighlightedTile") as GameObject;
+		lHighlight.GetComponent<SpriteRenderer>().sprite = highlightSprite;
+
 		foreach (Vector2 tile in tiles)
 		{
-			GameObject highlight = Instantiate(highlightedTile) as GameObject;
+			GameObject highlight = Instantiate(lHighlight);
 			highlight.transform.parent = parent;
 			highlight.transform.localPosition = GetViewCoordinates(tile);
 			highlightTiles.Add(highlight);
