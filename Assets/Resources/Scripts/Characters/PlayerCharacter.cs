@@ -15,6 +15,9 @@ public class PlayerCharacter : Character
 	// Moved ?
 	bool moved;
 
+	// Skill selected
+	SkillData skillCast;
+
 	// State update
 	Coroutine dragUpdate;
 

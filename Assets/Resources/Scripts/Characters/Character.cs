@@ -62,6 +62,7 @@ public class Character : ButtonElement
 	 */
 	protected void SetPosition(Vector2 position)
 	{
+		MapManager.instance.UpdateModel(coordinates, gameObject);
 		transform.localPosition = new Vector3(MapManager.instance.GetViewCoordinates(coordinates).x + tileOffset.x,
 											  MapManager.instance.GetViewCoordinates(coordinates).y + tileOffset.y, -1);
 	}

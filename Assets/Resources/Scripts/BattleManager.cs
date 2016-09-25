@@ -48,7 +48,7 @@ public class BattleManager : MonoBehaviour
 		Dictionary<string, Vector2> characters = new Dictionary<string, Vector2>()
 		{
 			{"Tyr", new Vector2(2, 4)},
-			{"Ambu", new Vector2(4, 3)},
+			{"Ambu", new Vector2(7, 2)},
 			{"Orag", new Vector2(3, 1)},
 			{"Korri", new Vector2(7, 4)}
 		};

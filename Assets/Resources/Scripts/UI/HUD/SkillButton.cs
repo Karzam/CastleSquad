@@ -23,15 +23,15 @@ public class SkillButton : ButtonElement
 		if (!isSelected)
 		{
 			DeselectButtons();
-			isSelected = true;
 			HUDManager.instance.HideCharacterHUD();
 			MapManager.instance.DisableTilesHighlight();
 			MapManager.instance.EnableTilesHighlight(GetTargetTiles(), true);
+			isSelected = true;
 		}
 		else
 		{
-			isSelected = false;
 			MapManager.instance.DisableTilesHighlight();
+			isSelected = false;
 		}
 	}
 

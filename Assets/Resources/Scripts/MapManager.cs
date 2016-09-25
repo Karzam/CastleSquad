@@ -16,7 +16,6 @@ public class MapManager : MonoBehaviour
 	Sprite moveHighlightSprite;
 	Sprite selectedSprite;
 
-	// Coordinates map
 	public Dictionary<Vector2, GameObject> model;
 
 	List<GameObject> highlightTiles = new List<GameObject>();
@@ -60,6 +59,31 @@ public class MapManager : MonoBehaviour
 	}
 
 	/*
+	 * Update model with new object coordinates
+	 */
+	public void UpdateModel(Vector2 coordinates, GameObject obj)
+	{
+		Vector2 oldCoordinates = new Vector2();
+
+		// Suppress old object
+		foreach (KeyValuePair<Vector2, GameObject> entry in model)
+		{
+			if (entry.Value != null)
+			{
+				if (entry.Value.Equals(obj))
+				{
+					oldCoordinates = entry.Key;
+				}
+			}
+		}
+
+		model[oldCoordinates] = null;
+
+		// Insert new object
+		model[coordinates] = obj;
+	}
+
+	/*
 	 * Get model coordinates with view position
 	 */
 	public Vector2 GetModelCoordinates(Vector2 position)
@@ -76,7 +100,15 @@ public class MapManager : MonoBehaviour
 	}
 
 	/*
-	 * Set highlight on tiles available to move
+	 * Return object at model coordinates
+	 */
+	public GameObject GetObjectWithModelCoordinates(Vector2 position)
+	{
+		return model[new Vector2(Mathf.Floor(position.x / TILE_SIZE), Mathf.Floor(position.y / TILE_SIZE))];
+	}
+
+	/*
+	 * Set highlight on tiles
 	 */
 	public void EnableTilesHighlight(List<Vector2> tiles, bool isTargetTiles = false)
 	{

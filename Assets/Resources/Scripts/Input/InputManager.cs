@@ -17,7 +17,11 @@ public class InputManager : MonoBehaviour
 
 	void Update ()
 	{
-		// Nowhere touch
+		MouseEvent();
+	}
+
+	private void MouseEvent()
+	{
 		if (Input.GetMouseButtonDown(0))
 		{
 			Vector3 screenPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -35,17 +39,7 @@ public class InputManager : MonoBehaviour
 			else onTouchVoid();
 		}
 	}
-
-//	private void MouseEvent()
-//	{
-//		if (Input.GetMouseButtonDown(0)) {
-//			beganTouchEvent(Input.mousePosition);
-//		}
-//		else if (Input.GetMouseButtonUp(0)) {
-//			endedTouchEvent();
-//		}
-//	}
-//	
+	
 //	// Input start
 //	private void beganTouchEvent(Vector3 touchPosition)
 //	{
