@@ -122,7 +122,11 @@ public class EnemyCharacter : Character
 
 	public override void OnMouseDown()
 	{
-		if (state == State.Idle)
+		if (IsCharacterCastingSkill())
+		{
+			SetTargetedState();
+		}
+		else if (state == State.Idle)
 		{
 			DeselectAllCharacters();
 			SetSelectedState(false);
@@ -145,7 +149,13 @@ public class EnemyCharacter : Character
 	protected override void SetSelectedState(bool displayMovingTiles)
 	{
 		base.SetSelectedState(displayMovingTiles);
-		HUDManager.instance.DisplayCharacterHUD(transform.position, gameObject, data, false);
+		HUDManager.instance.DisplaySideButtons(transform.position, gameObject, false);
+		HUDManager.instance.DisplayBottomDetails(gameObject, false);
+	}
+
+	protected override void SetTargetedState()
+	{
+		base.SetTargetedState();
 	}
 
 	public override void SetFinishState()

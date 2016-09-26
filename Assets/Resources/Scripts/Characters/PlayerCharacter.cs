@@ -9,14 +9,14 @@ public class PlayerCharacter : Character
 {
 	public static List<GameObject> playerList = new List<GameObject>();
 
+	// Skill selected
+	public Skill skillCast;
+
 	// Overflown coordinates when dragged
 	Vector2 overflownCoordinates = Vector2.zero;
 
 	// Moved ?
 	bool moved;
-
-	// Skill selected
-	SkillData skillCast;
 
 	// State update
 	Coroutine dragUpdate;
@@ -29,6 +29,22 @@ public class PlayerCharacter : Character
 		playerList.Add(gameObject);
 		data = DataParser.GetPlayerCharacterData(name);
 		SetSprite();
+		SetSkills();
+	}
+
+	/*
+	 * Set skills of the character
+	 */
+	void SetSkills()
+	{
+		List<string> skills = new List<string>(new string[] {data.skl_1, data.skl_2, data.skl_3, data.skl_4});
+
+		for (int i = 0; i < 4; i++)
+		{
+			var skill = new Skill();
+			skill.data = DataParser.GetSkillData(skills[i]);
+			skillsList.Add(skill);
+		}
 	}
 
 	/*
@@ -37,6 +53,14 @@ public class PlayerCharacter : Character
 	void SetSprite()
 	{
 		sprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Characters/" + data.name);
+	}
+
+	/*
+	 * Update skill cast
+	 */
+	public void SetSkillCast(Skill skill)
+	{
+		skillCast = skill;
 	}
 
 	public override void OnMouseDown()
@@ -63,7 +87,7 @@ public class PlayerCharacter : Character
 		if (state == State.Dragged)
 		{
 			// If moved on available tile
-			MapManager.instance.DisableTilesHighlight();
+			TileManager.instance.RemoveTiles();
 			if (GetDestinationTiles().Contains(overflownCoordinates)) {
 				SetDroppedState();
 				moved = true;
@@ -82,25 +106,27 @@ public class PlayerCharacter : Character
 	protected override void SetIdleState()
 	{
 		base.SetIdleState();
-		HUDManager.instance.HideCharacterHUD();
+		HUDManager.instance.HideBottomDetails();
+		HUDManager.instance.HideSideButtons();
 		HUDManager.instance.HideSkillsBar();
-		MapManager.instance.DisableTilesHighlight();
+		TileManager.instance.RemoveTiles();
 	}
 
 	protected override void SetSelectedState(bool displayMovingTiles)
 	{
 		base.SetSelectedState(displayMovingTiles);
-		if (displayMovingTiles) MapManager.instance.EnableTilesHighlight(GetDestinationTiles());
-		HUDManager.instance.DisplayCharacterHUD(transform.position, gameObject, data, true);
-		HUDManager.instance.DisplaySkillsBar(gameObject, data);
+		if (displayMovingTiles) TileManager.instance.DisplayTiles(GetDestinationTiles(), TileManager.Tile.Move);
+		HUDManager.instance.DisplaySideButtons(transform.position, gameObject, true);
+		HUDManager.instance.DisplayBottomDetails(gameObject, true);
+		HUDManager.instance.DisplaySkillsBar(gameObject, skillsList);
 	}
 
 	protected override void SetDraggedState()
 	{
 		base.SetDraggedState();
 		dragUpdate = StartCoroutine(DragUpdate());
-		MapManager.instance.EnableTilesHighlight(GetDestinationTiles());
-		HUDManager.instance.HideCharacterHUD();
+		TileManager.instance.DisplayTiles(GetDestinationTiles(), TileManager.Tile.Move);
+		HUDManager.instance.HideSideButtons();
 	}
 
 	protected override void SetDroppedState()
@@ -112,9 +138,10 @@ public class PlayerCharacter : Character
 	{
 		base.SetFinishState();
 		sprite.GetComponent<SpriteRenderer>().color = new Color(0.2f, 0.2f, 0.2f, 0.8f);
-		HUDManager.instance.HideCharacterHUD();
+		HUDManager.instance.HideSideButtons();
+		HUDManager.instance.HideBottomDetails();
 		HUDManager.instance.HideSkillsBar();
-		MapManager.instance.DisableTilesHighlight();
+		TileManager.instance.RemoveTiles();
 		CheckEndPhase();
 	}
 
@@ -160,7 +187,7 @@ public class PlayerCharacter : Character
 				Vector2 tileOverflown = MapManager.instance.GetModelCoordinates(transform.localPosition + new Vector3(0, 0, 0));
 				if (tileOverflown != overflownCoordinates) {
 					overflownCoordinates = tileOverflown;
-					MapManager.instance.TintTileHighlight(overflownCoordinates);
+					TileManager.instance.DisplayTiles(new List<Vector2>{overflownCoordinates}, TileManager.Tile.Target);
 				}
 			}
 			else {

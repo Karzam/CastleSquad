@@ -5,14 +5,16 @@ using UnityEngine.UI;
 
 public class SkillButton : ButtonElement
 {
-	SkillData data;
+	GameObject character;
+	Skill skill;
 	Vector2 coordinates;
 
 	bool isSelected;
 
-	public void Initialize(SkillData pData, Vector2 pCoordinates)
+	public void Initialize(GameObject pCharacter, Skill pSkill, Vector2 pCoordinates)
 	{
-		data = pData;
+		character = pCharacter;
+		skill = pSkill;
 		coordinates = pCoordinates;
 	}
 
@@ -23,14 +25,15 @@ public class SkillButton : ButtonElement
 		if (!isSelected)
 		{
 			DeselectButtons();
-			HUDManager.instance.HideCharacterHUD();
-			MapManager.instance.DisableTilesHighlight();
-			MapManager.instance.EnableTilesHighlight(GetTargetTiles(), true);
+			character.GetComponent<PlayerCharacter>().SetSkillCast(skill);
+			TileManager.instance.DisplayTiles(GetTargetTiles(), TileManager.Tile.Skill);
+			HUDManager.instance.HideSideButtons();
 			isSelected = true;
 		}
 		else
 		{
-			MapManager.instance.DisableTilesHighlight();
+			TileManager.instance.RemoveTiles();
+			character.GetComponent<PlayerCharacter>().SetSkillCast(null);
 			isSelected = false;
 		}
 	}
@@ -61,18 +64,18 @@ public class SkillButton : ButtonElement
 
 		foreach (Vector2 tile in MapManager.instance.model.Keys)
 		{
-			if (tile.x <= coordinates.x + data.range - (coordinates.y - tile.y) &&
-				tile.x <= coordinates.x + data.range - (tile.y - coordinates.y) &&
+			if (tile.x <= coordinates.x + skill.data.range - (coordinates.y - tile.y) &&
+				tile.x <= coordinates.x + skill.data.range - (tile.y - coordinates.y) &&
 				tile.x - coordinates.x >= 0) {
-				if (data.rangeType == "Cross" || data.rangeType == "Away")
+				if (skill.data.rangeType == "Cross" || skill.data.rangeType == "Away")
 				{
 					if ((tile.x == coordinates.x || tile.y == coordinates.y))
 					{
-						if (data.rangeType == "Away")
+						if (skill.data.rangeType == "Away")
 						{
-							if ((tile.x > coordinates.x + data.rangeMinDist && tile.y == coordinates.y)
-								|| (tile.x == coordinates.x && tile.y > coordinates.y + data.rangeMinDist)
-								|| (tile.x == coordinates.x && tile.y < coordinates.y - data.rangeMinDist))
+							if ((tile.x > coordinates.x + skill.data.rangeMinDist && tile.y == coordinates.y)
+								|| (tile.x == coordinates.x && tile.y > coordinates.y + skill.data.rangeMinDist)
+								|| (tile.x == coordinates.x && tile.y < coordinates.y - skill.data.rangeMinDist))
 							{
 								tiles.Add(tile);
 							}
@@ -82,16 +85,16 @@ public class SkillButton : ButtonElement
 				}
 				else tiles.Add(tile);
 			}
-			if (tile.x >= coordinates.x - data.range - (coordinates.y - tile.y) &&
-				tile.x >= coordinates.x - data.range - (tile.y - coordinates.y) &&
+			if (tile.x >= coordinates.x - skill.data.range - (coordinates.y - tile.y) &&
+				tile.x >= coordinates.x - skill.data.range - (tile.y - coordinates.y) &&
 				tile.x - coordinates.x < 0) {
-				if (data.rangeType == "Cross" || data.rangeType == "Away")
+				if (skill.data.rangeType == "Cross" || skill.data.rangeType == "Away")
 				{
 					if ((tile.x == coordinates.x || tile.y == coordinates.y))
 					{
-						if (data.rangeType == "Away")
+						if (skill.data.rangeType == "Away")
 						{
-							if (tile.x < coordinates.x - data.rangeMinDist)
+							if (tile.x < coordinates.x - skill.data.rangeMinDist)
 							{
 								tiles.Add(tile);
 							}

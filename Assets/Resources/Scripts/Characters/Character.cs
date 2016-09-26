@@ -11,13 +11,10 @@ public class Character : ButtonElement
 	public static List<GameObject> list = new List<GameObject>();
 
 	// Character data
-	protected CharacterData data;
+	public CharacterData data;
 
 	// Current model coordinates
 	public Vector2 coordinates;
-
-	// Sprite child
-	protected GameObject sprite;
 
 	/*
 	 * Current state of the character :
@@ -27,15 +24,22 @@ public class Character : ButtonElement
 	 * Dragged   => Player caught the character
 	 * Dropped   => Character just moved
 	 * Attacked  => Character just attacked
+	 * Targeted  => Targeted with skill
 	 * Finished  => Finished playing
 	 */
-	public enum State {Idle, Selected, Dragged, Dropped, Attacked, Finished};
+	public enum State {Idle, Selected, Dragged, Dropped, Attacked, Targeted, Finished};
 
 	// Current state
 	public State state;
 
+	// Sprite child
+	protected GameObject sprite;
+
 	// Positioning on tile
 	protected Vector2 tileOffset;
+
+	// Skills list
+	protected List<Skill> skillsList = new List<Skill>();
 
 	void Awake()
 	{
@@ -87,11 +91,28 @@ public class Character : ButtonElement
 	}
 
 	/*
+	 * Return true if a character is casting a skill
+	 */
+	protected bool IsCharacterCastingSkill()
+	{
+		foreach (GameObject character in PlayerCharacter.playerList)
+		{
+			if (character.GetComponent<PlayerCharacter>().skillCast != null)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/*
 	 * Set all characters selected to idle state
 	 */
 	protected void DeselectAllCharacters()
 	{
-		foreach (GameObject character in list) {
+		foreach (GameObject character in list)
+		{
 			if (character.GetComponent<Character>().state != State.Finished)
 			{
 				character.GetComponent<Character>().SetIdleState();
@@ -143,6 +164,11 @@ public class Character : ButtonElement
 	protected virtual void SetDroppedState()
 	{
 		state = State.Dropped;
+	}
+
+	protected virtual void SetTargetedState()
+	{
+		state = State.Targeted;
 	}
 
 	public virtual void SetFinishState()

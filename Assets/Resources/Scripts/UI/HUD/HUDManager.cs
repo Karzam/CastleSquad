@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /**
  * Manage all HUDs (characters buttons etc...)
@@ -38,14 +39,25 @@ public class HUDManager : MonoBehaviour
 		buttonFinish.SetActive(false);
 	}
 
-	public void DisplayCharacterHUD(Vector2 position, GameObject character, CharacterData data, bool isPlayerCharacter)
+	public void DisplayBottomDetails(GameObject character, bool isPlayerCharacter)
 	{
-		characterSelectedHUD.GetComponent<CharacterSelectedHUD>().SetData(data, isPlayerCharacter);
+		characterSelectedHUD.GetComponent<CharacterSelectedHUD>().SetData(character.GetComponent<Character>().data, isPlayerCharacter);
 		characterSelectedHUD.SetActive(true);
+	}
 
+	public void HideBottomDetails()
+	{
+		if (characterSelectedHUD != null)
+		{
+			characterSelectedHUD.SetActive(false);
+		}
+	}
+
+	public void DisplaySideButtons(Vector2 position, GameObject character, bool isPlayerCharacter)
+	{
 		if (isPlayerCharacter)
 		{
-			buttonDetail.GetComponent<DetailButton>().SetData(data, isPlayerCharacter);
+			buttonDetail.GetComponent<DetailButton>().SetData(character.GetComponent<Character>().data, isPlayerCharacter);
 			buttonDetail.transform.position = new Vector3(position.x - 15, position.y - 10, -2);
 			buttonDetail.SetActive(true);
 
@@ -55,25 +67,24 @@ public class HUDManager : MonoBehaviour
 		}
 		else
 		{
-			buttonDetail.GetComponent<DetailButton>().SetData(data, isPlayerCharacter);
+			buttonDetail.GetComponent<DetailButton>().SetData(character.GetComponent<Character>().data, isPlayerCharacter);
 			buttonDetail.transform.position = new Vector3(position.x, position.y - 12, -2);
 			buttonDetail.SetActive(true);
 		}
 	}
 
-	public void HideCharacterHUD()
+	public void HideSideButtons()
 	{
 		if (buttonDetail != null)
 		{
 			buttonDetail.SetActive(false);
 			buttonFinish.SetActive(false);
-			characterSelectedHUD.SetActive(false);
 		}
 	}
 
-	public void DisplaySkillsBar(GameObject character, CharacterData data)
+	public void DisplaySkillsBar(GameObject character, List<Skill> skills)
 	{
-		skillsBar.GetComponent<SkillsBar>().SetData(data, character.GetComponent<Character>().coordinates);
+		skillsBar.GetComponent<SkillsBar>().SetData(character, character.GetComponent<Character>().data, skills);
 		skillsBar.SetActive(true);
 	}
 

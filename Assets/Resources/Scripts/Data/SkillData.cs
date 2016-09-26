@@ -9,7 +9,6 @@ public class SkillData
 	 * Range types => Full, Cross, Away
  	 * Zone types => Cross, Square, Line
 	 */
-
 	public string name;
 	public int duration;
 	public int cooldown;
