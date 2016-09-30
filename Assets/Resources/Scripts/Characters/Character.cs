@@ -6,7 +6,7 @@ using System.Collections.Generic;
  * Base class for all characters
  * Contains interactions with the player
  */
-public class Character : ButtonElement
+public class Character : MonoBehaviour
 {
 	public static List<GameObject> list = new List<GameObject>();
 
@@ -32,8 +32,17 @@ public class Character : ButtonElement
 	// Current state
 	public State state;
 
+	// Skill selected
+	public Skill skillCast;
+
+	// Moved ?
+	public bool moved;
+
 	// Sprite child
 	protected GameObject sprite;
+
+	// Overflown coordinates when dragged
+	protected Vector2 overflownCoordinates = Vector2.zero;
 
 	// Positioning on tile
 	protected Vector2 tileOffset;
@@ -41,19 +50,12 @@ public class Character : ButtonElement
 	// Skills list
 	protected List<Skill> skillsList = new List<Skill>();
 
-	void Awake()
-	{
-		InputManager.instance.onTouchVoid += OnTouchVoid;
-	}
 
 	public virtual void Initialize(string name, Vector2 startCoordinates)
 	{
 		list.Add(gameObject);
-
 		sprite = transform.FindChild("Sprite").gameObject;
-
 		tileOffset = new Vector2(MapManager.TILE_SIZE / 2, 4);
-
 		coordinates = startCoordinates;
 
 		SetPosition(coordinates);
@@ -71,45 +73,10 @@ public class Character : ButtonElement
 											  MapManager.instance.GetViewCoordinates(coordinates).y + tileOffset.y, -1);
 	}
 
-	public override void OnMouseDown()
-	{
-		base.OnMouseDown();
-	}
-
-	public override void OnMouseUp()
-	{
-		base.OnMouseUp();
-	}
-
-	void OnTouchVoid()
-	{
-		DeselectAllCharacters();
-		if (state == State.Selected)
-		{
-			SetIdleState();
-		}
-	}
-
-	/*
-	 * Return true if a character is casting a skill
-	 */
-	protected bool IsCharacterCastingSkill()
-	{
-		foreach (GameObject character in PlayerCharacter.playerList)
-		{
-			if (character.GetComponent<PlayerCharacter>().skillCast != null)
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	/*
 	 * Set all characters selected to idle state
 	 */
-	protected void DeselectAllCharacters()
+	public static void DeselectAllCharacters()
 	{
 		foreach (GameObject character in list)
 		{
@@ -117,6 +84,23 @@ public class Character : ButtonElement
 			{
 				character.GetComponent<Character>().SetIdleState();
 			}
+		}
+	}
+
+	/*
+	 * Handle action when character released
+	 */
+	public void HandleReleased()
+	{
+		// If moved on available tile
+		TileManager.instance.RemoveTiles();
+		if (GetDestinationTiles().Contains(overflownCoordinates)) {
+			SetDroppedState();
+		}
+		else {
+			SetIdleState();
+			sprite.transform.eulerAngles = Vector3.zero;
+			SetPosition(coordinates);
 		}
 	}
 
@@ -146,27 +130,27 @@ public class Character : ButtonElement
 		return tiles;
 	}
 
-	protected virtual void SetIdleState()
+	public virtual void SetIdleState()
 	{
 		state = State.Idle;
 	}
 
-	protected virtual void SetSelectedState(bool displayMovingTiles)
+	public virtual void SetSelectedState()
 	{
 		state = State.Selected;
 	}
 
-	protected virtual void SetDraggedState()
+	public virtual void SetDraggedState()
 	{
 		state = State.Dragged;
 	}
 
-	protected virtual void SetDroppedState()
+	public virtual void SetDroppedState()
 	{
 		state = State.Dropped;
 	}
 
-	protected virtual void SetTargetedState()
+	public virtual void SetTargetedState()
 	{
 		state = State.Targeted;
 	}

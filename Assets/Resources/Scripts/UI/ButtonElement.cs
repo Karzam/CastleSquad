@@ -9,6 +9,11 @@ abstract public class AbstractButton : MonoBehaviour
 
 public class ButtonElement : AbstractButton
 {
+	void Awake()
+	{
+		gameObject.layer = Layer.BUTTON;
+	}
+
 	// Static button scale
 	Vector3 staticScale = new Vector3(1f, 1f, 1f);
 

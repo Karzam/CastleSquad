@@ -5,24 +5,73 @@ public class CharacterManager : MonoBehaviour
 {
 	public static CharacterManager instance;
 
+
 	void Awake()
 	{
 		instance = this;
 	}
 
-	// Battle phases broadcast
-	public delegate void BattlePhaseEvent();
-	public event BattlePhaseEvent onEndPlayerPhase;
-	public event BattlePhaseEvent onEndEnemyPhase;
-
-	public void EndPlayerPhase()
+	/*
+	 * Handle player character touch down
+	 */
+	public void HandlePlayerCharacterTouchDown(GameObject character)
 	{
-		onEndPlayerPhase();
+		Character charComponent = character.GetComponent<Character>();
+
+		if (charComponent.state == Character.State.Idle)
+		{
+			Character.DeselectAllCharacters();
+			if (!charComponent.moved) charComponent.SetSelectedState();
+			else charComponent.SetSelectedState();
+		}
+		else if (charComponent.state == Character.State.Selected)
+		{
+			if (!charComponent.moved) charComponent.SetDraggedState();
+			else charComponent.SetIdleState();
+		}
+		else if (charComponent.state == Character.State.Dropped)
+		{
+			charComponent.SetSelectedState();
+		}
 	}
 
-	public void EndEnemyPhase()
+	/*
+	 * Handle player character touch up
+	 */
+	public void HandlePlayerCharacterTouchUp(GameObject character)
 	{
-		onEndPlayerPhase();
+		Character charComponent = character.GetComponent<Character>();
+
+		if (charComponent.state == Character.State.Dragged)
+		{
+			charComponent.HandleReleased();
+		}
+	}
+
+	/*
+	 * Handle enemy character actions
+	 */
+	public void HandleEnemyCharacterTouchDown(GameObject character)
+	{
+		Character charComponent = character.GetComponent<Character>();
+
+		if (charComponent.state == Character.State.Idle)
+		{
+			Character.DeselectAllCharacters();
+			charComponent.SetSelectedState();
+		}
+		else if (charComponent.state == Character.State.Selected)
+		{
+			charComponent.SetIdleState();
+		}
+	}
+
+	/*
+	 * Handle void touch
+	 */
+	public void HandleVoidTouch()
+	{
+		Character.DeselectAllCharacters();
 	}
 
 }

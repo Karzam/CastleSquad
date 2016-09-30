@@ -11,6 +11,7 @@ public class SkillButton : ButtonElement
 
 	bool isSelected;
 
+
 	public void Initialize(GameObject pCharacter, Skill pSkill, Vector2 pCoordinates)
 	{
 		character = pCharacter;
@@ -22,25 +23,35 @@ public class SkillButton : ButtonElement
 	{
 		base.OnMouseDown();
 
-		if (!isSelected)
-		{
-			DeselectButtons();
-			character.GetComponent<PlayerCharacter>().SetSkillCast(skill);
-			TileManager.instance.DisplayTiles(GetTargetTiles(), TileManager.Tile.Skill);
-			HUDManager.instance.HideSideButtons();
-			isSelected = true;
-		}
-		else
-		{
-			TileManager.instance.RemoveTiles();
-			character.GetComponent<PlayerCharacter>().SetSkillCast(null);
-			isSelected = false;
-		}
+//		if (!isSelected)
+//		{
+//			InputManager.instance.onTouchEnemy += TargetEnemy;
+//			DeselectButtons();
+//			character.GetComponent<PlayerCharacter>().SetSkillCast(skill);
+//			TileManager.instance.DisplayTiles(GetTargetTiles(), TileManager.Tile.Skill);
+//			HUDManager.instance.HideSideButtons();
+//			isSelected = true;
+//		}
+//		else
+//		{
+//			InputManager.instance.onTouchEnemy -= TargetEnemy;
+//			TileManager.instance.RemoveTiles();
+//			character.GetComponent<PlayerCharacter>().SetSkillCast(null);
+//			isSelected = false;
+//		}
 	}
 
 	public override void OnMouseUp()
 	{
 		base.OnMouseUp();
+	}
+
+	/*
+	 * Target enemy with skill
+	 */
+	void TargetEnemy(GameObject hit)
+	{
+		hit.gameObject.GetComponent<EnemyCharacter>().SetTargetedState();
 	}
 
 	/*

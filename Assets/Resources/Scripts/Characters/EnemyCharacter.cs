@@ -17,6 +17,8 @@ public class EnemyCharacter : Character
 	public override void Initialize(string name, Vector2 startCoordinates)
 	{
 		base.Initialize(name, startCoordinates);
+
+		gameObject.layer = Layer.ENEMY_CHARACTER;
 		enemyList.Add(gameObject);
 		data = DataParser.GetEnemyCharacterData(name.Split("_"[0])[0]);
 		SetSprite();
@@ -120,42 +122,22 @@ public class EnemyCharacter : Character
 		return false;
 	}
 
-	public override void OnMouseDown()
-	{
-		if (IsCharacterCastingSkill())
-		{
-			SetTargetedState();
-		}
-		else if (state == State.Idle)
-		{
-			DeselectAllCharacters();
-			SetSelectedState(false);
-		}
-		else if (state == State.Selected)
-		{
-			SetIdleState();
-		}
-	}
-
-	public override void OnMouseUp()
-	{
-	}
-
-	protected override void SetIdleState()
+	public override void SetIdleState()
 	{
 		base.SetIdleState();
 	}
 
-	protected override void SetSelectedState(bool displayMovingTiles)
+	public override void SetSelectedState()
 	{
-		base.SetSelectedState(displayMovingTiles);
+		base.SetSelectedState();
 		HUDManager.instance.DisplaySideButtons(transform.position, gameObject, false);
 		HUDManager.instance.DisplayBottomDetails(gameObject, false);
 	}
 
-	protected override void SetTargetedState()
+	public override void SetTargetedState()
 	{
 		base.SetTargetedState();
+		HUDManager.instance.HideSideButtons();
 	}
 
 	public override void SetFinishState()

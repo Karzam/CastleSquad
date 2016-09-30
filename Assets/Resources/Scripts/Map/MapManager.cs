@@ -17,6 +17,7 @@ public class MapManager : MonoBehaviour
 	const int MAP_WIDTH = 14;
 	const int MAP_HEIGHT = 6;
 
+
 	void Awake()
 	{
 		instance = this;

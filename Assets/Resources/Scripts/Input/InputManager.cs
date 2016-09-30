@@ -5,10 +5,11 @@ public class InputManager : MonoBehaviour
 {
 	public static InputManager instance;
 
-	public delegate void Event();
-	public event Event onTouchVoid;
+	public delegate void Event(GameObject hit);
+	public event Event onTouchDown;
+	public event Event onTouchUp;
 
-	Collider2D hit;
+	GameObject currentObject;
 	
 	void Awake()
 	{
@@ -22,52 +23,36 @@ public class InputManager : MonoBehaviour
 
 	private void MouseEvent()
 	{
-		if (Input.GetMouseButtonDown(0))
-		{
-			Vector3 screenPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-			Vector2 touchPos = new Vector2(screenPoint.x, screenPoint.y);
-			Collider2D hit = Physics2D.OverlapPoint(touchPos);
-
-			if (hit)
-			{
-				if (hit.gameObject.GetComponent("ButtonElement") == null)
-				{
-					onTouchVoid();
-				}
-			}
-			else onTouchVoid();
+		if (Input.GetMouseButtonDown(0)) {
+			beganTouchEvent(Input.mousePosition);
+		}
+		else if (Input.GetMouseButtonUp(0)) {
+			endedTouchEvent();
 		}
 	}
 	
-//	// Input start
-//	private void beganTouchEvent(Vector3 touchPosition)
-//	{
-//		Vector3 screenPoint = Camera.main.ScreenToWorldPoint(touchPosition);
-//		
-//		Vector2 touchPos = new Vector2(screenPoint.x, screenPoint.y);
-//		hit = Physics2D.OverlapPoint(touchPos);
-//		
-//		if (hit)
-//		{
-//			if (hit.gameObject.GetComponent<ButtonElement>() != null) {
-//				//hit.gameObject.GetComponent<ButtonElement>().OnTouchDown();
-//				print("button component");
-//			}
-//			else print("no button component");
-//		}
-//		else {
-//			onTouchVoid();
-//		}
-//	}
-//	
-//	// Input end
-//	private void endedTouchEvent()
-//	{
-//		if (hit != null)
-//		{
-//			//if (hit.gameObject.GetComponent<ButtonElement>() != null) hit.gameObject.GetComponent<ButtonElement>().OnTouchUp();
-//			hit = null;
-//		}
-//	}
+	// Input start
+	private void beganTouchEvent(Vector3 touchPosition)
+	{
+		Vector3 screenPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		Vector2 touchPos = new Vector2(screenPoint.x, screenPoint.y);
+		Collider2D hit = Physics2D.OverlapPoint(touchPos);
+
+		if (hit)
+		{
+			currentObject = hit.gameObject;
+			onTouchDown(hit.gameObject);
+		}
+		else onTouchDown(null);
+	}
+	
+	// Input end
+	private void endedTouchEvent()
+	{
+		if (currentObject != null)
+		{
+			onTouchUp(currentObject);
+			currentObject = null;
+		}
+	}
 }

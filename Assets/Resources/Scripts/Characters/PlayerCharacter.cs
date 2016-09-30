@@ -9,16 +9,7 @@ public class PlayerCharacter : Character
 {
 	public static List<GameObject> playerList = new List<GameObject>();
 
-	// Skill selected
-	public Skill skillCast;
-
-	// Overflown coordinates when dragged
-	Vector2 overflownCoordinates = Vector2.zero;
-
-	// Moved ?
-	bool moved;
-
-	// State update
+	// Drag state update
 	Coroutine dragUpdate;
 
 
@@ -26,6 +17,8 @@ public class PlayerCharacter : Character
 	public override void Initialize(string name, Vector2 startCoordinates)
 	{
 		base.Initialize(name, startCoordinates);
+
+		gameObject.layer = Layer.PLAYER_CHARACTER;
 		playerList.Add(gameObject);
 		data = DataParser.GetPlayerCharacterData(name);
 		SetSprite();
@@ -63,47 +56,7 @@ public class PlayerCharacter : Character
 		skillCast = skill;
 	}
 
-	public override void OnMouseDown()
-	{
-		if (state == State.Idle)
-		{
-			DeselectAllCharacters();
-			if (!moved) SetSelectedState(true);
-			else SetSelectedState(false);
-		}
-		else if (state == State.Selected)
-		{
-			if (!moved) SetDraggedState();
-			else SetIdleState();
-		}
-		else if (state == State.Dropped)
-		{
-			SetSelectedState(false);
-		}
-	}
-
-	public override void OnMouseUp()
-	{
-		if (state == State.Dragged)
-		{
-			// If moved on available tile
-			TileManager.instance.RemoveTiles();
-			if (GetDestinationTiles().Contains(overflownCoordinates)) {
-				SetDroppedState();
-				moved = true;
-				sprite.transform.eulerAngles = Vector3.zero;
-				coordinates = overflownCoordinates;
-				SetPosition(coordinates);
-			}
-			else {
-				SetIdleState();
-				sprite.transform.eulerAngles = Vector3.zero;
-				SetPosition(coordinates);
-			}
-		}
-	}
-
-	protected override void SetIdleState()
+	public override void SetIdleState()
 	{
 		base.SetIdleState();
 		HUDManager.instance.HideBottomDetails();
@@ -112,16 +65,16 @@ public class PlayerCharacter : Character
 		TileManager.instance.RemoveTiles();
 	}
 
-	protected override void SetSelectedState(bool displayMovingTiles)
+	public override void SetSelectedState()
 	{
-		base.SetSelectedState(displayMovingTiles);
-		if (displayMovingTiles) TileManager.instance.DisplayTiles(GetDestinationTiles(), TileManager.Tile.Move);
+		base.SetSelectedState();
+		if (!moved) TileManager.instance.DisplayTiles(GetDestinationTiles(), TileManager.Tile.Move);
 		HUDManager.instance.DisplaySideButtons(transform.position, gameObject, true);
 		HUDManager.instance.DisplayBottomDetails(gameObject, true);
 		HUDManager.instance.DisplaySkillsBar(gameObject, skillsList);
 	}
 
-	protected override void SetDraggedState()
+	public override void SetDraggedState()
 	{
 		base.SetDraggedState();
 		dragUpdate = StartCoroutine(DragUpdate());
@@ -129,9 +82,13 @@ public class PlayerCharacter : Character
 		HUDManager.instance.HideSideButtons();
 	}
 
-	protected override void SetDroppedState()
+	public override void SetDroppedState()
 	{
 		base.SetDroppedState();
+		moved = true;
+		sprite.transform.eulerAngles = Vector3.zero;
+		coordinates = overflownCoordinates;
+		SetPosition(coordinates);
 	}
 
 	public override void SetFinishState()
@@ -156,7 +113,6 @@ public class PlayerCharacter : Character
 				return;
 			}
 		}
-		CharacterManager.instance.EndPlayerPhase();
 	}
 
 	/*

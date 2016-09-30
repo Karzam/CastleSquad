@@ -24,9 +24,6 @@ public class BattleManager : MonoBehaviour
 	void Awake()
 	{
 		instance = this;
-
-		CharacterManager.instance.onEndPlayerPhase += EndPlayerPhase;
-		CharacterManager.instance.onEndEnemyPhase += EndEnemyPhase;
 	}
 		
 	public void Start ()
