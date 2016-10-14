@@ -28,8 +28,10 @@ public class BattleManager : MonoBehaviour
 		
 	public void Start ()
 	{
+		HUDManager.instance.Initialize();
+		SkillManager.instance.Initialize();
+		Controller.instance.Initialize();
 		MapManager.instance.InitializeMap();
-		BattleUI.instance.Start();
 
 		InstantiatePlayerCharacters();
 		InstantiateEnemyCharacters();

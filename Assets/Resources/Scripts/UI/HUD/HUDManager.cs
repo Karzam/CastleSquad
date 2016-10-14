@@ -1,63 +1,108 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 /**
- * Manage all HUDs (characters buttons etc...)
+ * Manage buttons, pop-ups and battle UIs
  */
 public class HUDManager : MonoBehaviour
 {
 	public static HUDManager instance;
 
-	GameObject characterSelectedHUD;
+	// Phase UI
+	GameObject topLabel;
+
+	// Character selected informations
+	GameObject characterBottom;
+
+	// Skills bar
 	GameObject skillsBar;
+
+	// Character selected buttons
 	GameObject buttonDetail;
 	GameObject buttonFinish;
 
-	bool isPlayerCharacter;
+	// Validate skill button
+	GameObject buttonValidateSkill;
 
 
 	void Awake()
 	{
 		instance = this;
+
+		BattleManager.instance.onStartPlayerPhase += StartPlayerPhase;
+		BattleManager.instance.onStartEnemyPhase += StartEnemyPhase;
 	}
 
-	public void Start()
+	public void Initialize()
 	{
 		Transform parent = GameObject.Find("UI").transform;
 
-		characterSelectedHUD = Instantiate(Resources.Load("Prefabs/UI/Battle/CharacterSelectedHUD"), parent) as GameObject;
-		characterSelectedHUD.SetActive(false);
+		topLabel = GameObject.Find("TopLabel");
 
-		skillsBar = Instantiate(Resources.Load("Prefabs/UI/Battle/SkillsBar"), parent) as GameObject;
+		characterBottom = Instantiate(Resources.Load("Prefabs/UI/HUD/CharacterSelectedHUD"), parent) as GameObject;
+		characterBottom.SetActive(false);
+
+		skillsBar = Instantiate(Resources.Load("Prefabs/UI/HUD/SkillBar"), parent) as GameObject;
 		skillsBar.SetActive(false);
 
-		buttonDetail = Instantiate(Resources.Load("Prefabs/UI/Battle/ButtonDetail"), parent) as GameObject;
+		buttonDetail = Instantiate(Resources.Load("Prefabs/UI/HUD/ButtonDetail"), parent) as GameObject;
 		buttonDetail.SetActive(false);
 
-		buttonFinish = Instantiate(Resources.Load("Prefabs/UI/Battle/ButtonFinish"), parent) as GameObject;
+		buttonFinish = Instantiate(Resources.Load("Prefabs/UI/HUD/ButtonFinish"), parent) as GameObject;
 		buttonFinish.SetActive(false);
+
+		buttonValidateSkill = Instantiate(Resources.Load("Prefabs/UI/HUD/ButtonValidateSkill"), parent) as GameObject;
+		buttonValidateSkill.SetActive(false);
 	}
 
-	public void DisplayBottomDetails(GameObject character, bool isPlayerCharacter)
+	/*
+	 * Display and update character sprite and HP
+	 */
+	public void DisplayCharacterBottom(CharacterData pData, bool pIsPlayerCharacter)
 	{
-		characterSelectedHUD.GetComponent<CharacterSelectedHUD>().SetData(character.GetComponent<Character>().data, isPlayerCharacter);
-		characterSelectedHUD.SetActive(true);
+		characterBottom.GetComponent<CharacterBottom>().SetData(pData, pIsPlayerCharacter);
+		characterBottom.SetActive(true);
 	}
 
-	public void HideBottomDetails()
+	/*
+	 * Hide character sprite and HP
+	 */
+	public void HideCharacterBottom()
 	{
-		if (characterSelectedHUD != null)
+		if (characterBottom != null)
 		{
-			characterSelectedHUD.SetActive(false);
+			characterBottom.SetActive(false);
 		}
 	}
 
-	public void DisplaySideButtons(Vector2 position, GameObject character, bool isPlayerCharacter)
+	/*
+	 * Update top label
+	 */
+	void StartPlayerPhase()
+	{
+		topLabel.GetComponent<Text>().text = "Player Phase";
+		topLabel.GetComponent<Animation>().Play();
+	}
+
+	/*
+	 * Update top label
+	 */
+	void StartEnemyPhase()
+	{
+		topLabel.GetComponent<Text>().text = "Enemy Phase";
+		topLabel.GetComponent<Animation>().Play();
+	}
+
+	/*
+	 * Display character selected buttons
+	 */
+	public void DisplaySideButtons(Vector2 position, Character character, bool isPlayerCharacter)
 	{
 		if (isPlayerCharacter)
 		{
-			buttonDetail.GetComponent<DetailButton>().SetData(character.GetComponent<Character>().data, isPlayerCharacter);
+			buttonDetail.GetComponent<DetailButton>().SetData(character.data, isPlayerCharacter);
 			buttonDetail.transform.position = new Vector3(position.x - 15, position.y - 10, -2);
 			buttonDetail.SetActive(true);
 
@@ -67,12 +112,24 @@ public class HUDManager : MonoBehaviour
 		}
 		else
 		{
-			buttonDetail.GetComponent<DetailButton>().SetData(character.GetComponent<Character>().data, isPlayerCharacter);
+			buttonDetail.GetComponent<DetailButton>().SetData(character.data, isPlayerCharacter);
 			buttonDetail.transform.position = new Vector3(position.x, position.y - 12, -2);
 			buttonDetail.SetActive(true);
 		}
 	}
 
+	/*
+	 * Re-display last character selected buttons
+	 */
+	public void DisplayLastSideButtons()
+	{
+		buttonDetail.SetActive(true);
+		buttonFinish.SetActive(true);
+	}
+
+	/*
+	 * Hide character selected buttons
+	 */
 	public void HideSideButtons()
 	{
 		if (buttonDetail != null)
@@ -82,12 +139,19 @@ public class HUDManager : MonoBehaviour
 		}
 	}
 
-	public void DisplaySkillsBar(GameObject character, List<Skill> skills)
+	/*
+	 * Display skills buttons and initialize Skill Manager
+	 */
+	public void DisplaySkillsBar(Character pCharacter, CharacterData pData, List<Skill> pSkills)
 	{
-		skillsBar.GetComponent<SkillsBar>().SetData(character, character.GetComponent<Character>().data, skills);
+		SkillManager.instance.Initialize(pCharacter, pData, pSkills);
+		skillsBar.GetComponent<SkillBar>().SetData(pSkills);
 		skillsBar.SetActive(true);
 	}
 
+	/*
+	 * Hide skills buttons
+	 */
 	public void HideSkillsBar()
 	{
 		if (skillsBar != null)
@@ -95,6 +159,10 @@ public class HUDManager : MonoBehaviour
 			skillsBar.SetActive(false);
 		}
 	}
+
+	/*
+	 * Display validate skill button
+	 */
 
 }
 

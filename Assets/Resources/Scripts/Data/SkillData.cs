@@ -7,7 +7,7 @@ public class SkillData
 {
 	/*
 	 * Range types => Full, Cross, Away
- 	 * Zone types => Cross, Square, Line
+ 	 * Zone types => Cross, Square
 	 */
 	public string name;
 	public int duration;

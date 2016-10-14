@@ -3,9 +3,9 @@ using System.Collections;
 
 public class FinishButton : ButtonElement
 {
-	GameObject character;
+	Character character;
 
-	public void SetCharacter(GameObject pCharacter)
+	public void SetCharacter(Character pCharacter)
 	{
 		character = pCharacter;
 	}
@@ -19,7 +19,7 @@ public class FinishButton : ButtonElement
 	{
 		base.OnMouseUp();
 
-		character.GetComponent<Character>().SetFinishState();
+		character.SetFinishState();
 	}
 
 }

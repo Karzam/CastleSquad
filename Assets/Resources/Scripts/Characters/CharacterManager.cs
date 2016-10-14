@@ -57,8 +57,14 @@ public class CharacterManager : MonoBehaviour
 
 		if (charComponent.state == Character.State.Idle)
 		{
-			Character.DeselectAllCharacters();
-			charComponent.SetSelectedState();
+			// If selected when casting skill
+			if (SkillManager.instance.isCastingSkill()) {
+				SkillManager.instance.HandleCharacterSelected(charComponent);
+			}
+			else {
+				Character.DeselectAllCharacters();
+				charComponent.SetSelectedState();
+			}
 		}
 		else if (charComponent.state == Character.State.Selected)
 		{

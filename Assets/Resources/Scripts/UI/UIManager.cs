@@ -2,11 +2,12 @@
 using System.Collections;
 
 /**
- * Manage screen & popups
+ * Manage UI elements
  */
 public class UIManager : MonoBehaviour
 {
 	public static UIManager instance;
+
 
 	void Awake()
 	{

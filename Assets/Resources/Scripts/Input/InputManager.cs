@@ -5,11 +5,12 @@ public class InputManager : MonoBehaviour
 {
 	public static InputManager instance;
 
-	public delegate void Event(GameObject hit);
-	public event Event onTouchDown;
-	public event Event onTouchUp;
+	public delegate void InputEvent(GameObject hit);
+	public event InputEvent onTouchDown;
+	public event InputEvent onTouchUp;
 
 	GameObject currentObject;
+
 	
 	void Awake()
 	{

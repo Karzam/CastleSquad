@@ -43,6 +43,7 @@ public class DetailPopup : MonoBehaviour
 	 */
 	public void Close()
 	{
+		HUDManager.instance.DisplayLastSideButtons();
 		Destroy(gameObject);
 	}
 

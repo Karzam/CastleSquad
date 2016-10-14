@@ -14,8 +14,8 @@ public class MapManager : MonoBehaviour
 
 	public const float TILE_SIZE = 22.4f;
 	
-	const int MAP_WIDTH = 14;
-	const int MAP_HEIGHT = 6;
+	public const int MAP_WIDTH = 14;
+	public const int MAP_HEIGHT = 6;
 
 
 	void Awake()

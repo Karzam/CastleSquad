@@ -10,12 +10,13 @@ public class Controller : MonoBehaviour
 {
 	public static Controller instance;
 
-	GameObject currentObject;
-
-
 	void Awake()
 	{
 		instance = this;
+	}
+
+	public void Initialize()
+	{
 		InputManager.instance.onTouchDown += OnTouchDown;
 		InputManager.instance.onTouchUp += OnTouchUp;
 	}
@@ -32,16 +33,11 @@ public class Controller : MonoBehaviour
 		}
 		else if (hit.layer == Layer.PLAYER_CHARACTER)
 		{
-			currentObject = hit;
 			CharacterManager.instance.HandlePlayerCharacterTouchDown(hit.gameObject);
 		}
 		else if (hit.layer == Layer.ENEMY_CHARACTER)
 		{
-			currentObject = hit;
 			CharacterManager.instance.HandleEnemyCharacterTouchDown(hit.gameObject);
-		}
-		else if (hit.layer == Layer.BUTTON)
-		{
 		}
 	}
 

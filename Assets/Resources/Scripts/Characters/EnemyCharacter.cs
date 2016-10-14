@@ -13,7 +13,7 @@ public class EnemyCharacter : Character
 
 	List<Vector2> pathTiles;
 
-	// Use this for initialization
+
 	public override void Initialize(string name, Vector2 startCoordinates)
 	{
 		base.Initialize(name, startCoordinates);
@@ -130,8 +130,8 @@ public class EnemyCharacter : Character
 	public override void SetSelectedState()
 	{
 		base.SetSelectedState();
-		HUDManager.instance.DisplaySideButtons(transform.position, gameObject, false);
-		HUDManager.instance.DisplayBottomDetails(gameObject, false);
+		HUDManager.instance.DisplaySideButtons(transform.position, this, false);
+		HUDManager.instance.DisplayCharacterBottom(data, false);
 	}
 
 	public override void SetTargetedState()

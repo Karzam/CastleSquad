@@ -9,9 +9,6 @@ public class TileManager : MonoBehaviour
 {
 	public static TileManager instance;
 
-	// Tile types
-	public enum Tile {Move, Skill, Target};
-
 	// Move tile (green)
 	Sprite moveSprite;
 
@@ -21,11 +18,8 @@ public class TileManager : MonoBehaviour
 	// Target / Overflown tile (red)
 	Sprite targetSprite;
 
-	// Current tile sprite
-	Sprite currentSprite;
-
-	// Current tiles list
-	List<GameObject> tiles = new List<GameObject>();
+	// Tiles list
+	Dictionary<Vector2, GameObject> tiles = new Dictionary<Vector2, GameObject>();
 
 
 	void Awake()
@@ -38,67 +32,72 @@ public class TileManager : MonoBehaviour
 		moveSprite = Resources.Load<Sprite>("Sprites/Tiles/Move") as Sprite;
 		skillSprite = Resources.Load<Sprite>("Sprites/Tiles/Skill") as Sprite;
 		targetSprite = Resources.Load<Sprite>("Sprites/Tiles/Target") as Sprite;
+
+		InitializeTiles();
 	}
 
 	/*
-	 * Display tiles with type and coordinates in parameters
-	 * NB : Target tiles are replacing current tiles sprite and not removing them
+	 * Initialize tiles list
 	 */
-	public void DisplayTiles(List<Vector2> pTiles, Tile type)
+	void InitializeTiles()
 	{
 		Transform parent = GameObject.Find("Map").transform;
-		GameObject lHighlight = Resources.Load<GameObject>("Prefabs/Tiles/Tile") as GameObject;
 
-		if (type != Tile.Target)
+		for (int x = 0; x < MapManager.MAP_WIDTH; x++)
 		{
-			currentSprite = GetTileSprite(type);
-			lHighlight.GetComponent<SpriteRenderer>().sprite = currentSprite;
-
-			RemoveTiles();
-
-			foreach (Vector2 tile in pTiles)
+			for (int y = 0; y < MapManager.MAP_HEIGHT; y++)
 			{
-				GameObject highlight = Instantiate(lHighlight);
-				highlight.transform.parent = parent;
-				highlight.transform.localPosition = MapManager.instance.GetViewCoordinates(tile);
-				tiles.Add(highlight);
+				GameObject lTile = Instantiate(Resources.Load<GameObject>("Prefabs/Tiles/Tile")) as GameObject;
+				lTile.transform.parent = parent;
+				lTile.transform.localPosition = MapManager.instance.GetViewCoordinates(new Vector2(x, y));
+				tiles.Add(new Vector2(x, y), lTile);
 			}
 		}
-		else
+	}
+
+	/*
+	 * Set tiles sprite
+	 */
+	public void DisplayTiles(List<Vector2> pList, HighlightType pType)
+	{
+		if (pType != HighlightType.Target) {
+			RemoveTiles();
+		}
+
+		foreach (Vector2 pTile in pList)
 		{
-			foreach (Vector2 lTarget in pTiles)
+			foreach (KeyValuePair<Vector2, GameObject> tile in tiles)
 			{
-				foreach (GameObject lTile in tiles)
-				{
-					if (lTile != null)
-					{
-						if (MapManager.instance.GetModelCoordinates(lTile.transform.localPosition) == lTarget)
-						{
-							if (lTile.GetComponent<SpriteRenderer>().sprite != targetSprite)
-							{
-								lTile.GetComponent<SpriteRenderer>().sprite = targetSprite;
-							}
-						}
-						else
-						{
-							lTile.GetComponent<SpriteRenderer>().sprite = currentSprite;
-						}
-					}
+				if (pTile == tile.Key) {
+					tile.Value.GetComponent<SpriteRenderer>().sprite = GetTileSprite(pType);
 				}
 			}
 		}
 	}
 
 	/*
-	 * Delete highlighted tiles
+	 * Delete tiles sprite
+	 * If type parameter specified, replace with type sprite
 	 */
-	public void RemoveTiles()
+	public void RemoveTiles(List<Vector2> pList = default(List<Vector2>), HighlightType pType = default(HighlightType))
 	{
-		if (tiles.Count > 0)
+		if (pList != null)
 		{
-			foreach (GameObject tile in tiles)
+			foreach (Vector2 pTile in pList)
 			{
-				Destroy(tile);
+				if (pType != null) {
+					tiles[new Vector2(pTile.x, pTile.y)].GetComponent<SpriteRenderer>().sprite = GetTileSprite(pType);
+				}
+				else {
+					tiles[new Vector2(pTile.x, pTile.y)].GetComponent<SpriteRenderer>().sprite = null;
+				}
+			}
+		}
+		else
+		{
+			foreach (KeyValuePair<Vector2, GameObject> pTile in tiles)
+			{
+				pTile.Value.GetComponent<SpriteRenderer>().sprite = null;
 			}
 		}
 	}
@@ -106,12 +105,12 @@ public class TileManager : MonoBehaviour
 	/*
 	 * Get tile type sprite
 	 */
-	Sprite GetTileSprite(Tile type)
+	Sprite GetTileSprite(HighlightType type)
 	{
 		Sprite sprite;
 
-		if (type == Tile.Move) sprite = moveSprite;
-		else if (type == Tile.Skill) sprite = skillSprite;
+		if (type == HighlightType.Move) sprite = moveSprite;
+		else if (type == HighlightType.Skill) sprite = skillSprite;
 		else sprite = targetSprite;
 
 		return sprite;

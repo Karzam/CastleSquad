@@ -2,9 +2,9 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class CharacterSelectedHUD : MonoBehaviour
+public class CharacterBottom : MonoBehaviour
 {
-	
+
 	public void SetData(CharacterData pData, bool pIsPlayerCharacter)
 	{
 		if (pIsPlayerCharacter)
@@ -18,6 +18,5 @@ public class CharacterSelectedHUD : MonoBehaviour
 
 		transform.Find("HP").gameObject.GetComponent<Text>().text = pData.hp.ToString();
 	}
-
 }
 

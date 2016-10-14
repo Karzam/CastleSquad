@@ -48,18 +48,10 @@ public class PlayerCharacter : Character
 		sprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Characters/" + data.name);
 	}
 
-	/*
-	 * Update skill cast
-	 */
-	public void SetSkillCast(Skill skill)
-	{
-		skillCast = skill;
-	}
-
 	public override void SetIdleState()
 	{
 		base.SetIdleState();
-		HUDManager.instance.HideBottomDetails();
+		HUDManager.instance.HideCharacterBottom();
 		HUDManager.instance.HideSideButtons();
 		HUDManager.instance.HideSkillsBar();
 		TileManager.instance.RemoveTiles();
@@ -68,17 +60,17 @@ public class PlayerCharacter : Character
 	public override void SetSelectedState()
 	{
 		base.SetSelectedState();
-		if (!moved) TileManager.instance.DisplayTiles(GetDestinationTiles(), TileManager.Tile.Move);
-		HUDManager.instance.DisplaySideButtons(transform.position, gameObject, true);
-		HUDManager.instance.DisplayBottomDetails(gameObject, true);
-		HUDManager.instance.DisplaySkillsBar(gameObject, skillsList);
+		if (!moved) TileManager.instance.DisplayTiles(GetDestinationTiles(), HighlightType.Move);
+		HUDManager.instance.DisplaySideButtons(transform.position, this, true);
+		HUDManager.instance.DisplayCharacterBottom(data, true);
+		HUDManager.instance.DisplaySkillsBar(this, data, skillsList);
 	}
 
 	public override void SetDraggedState()
 	{
 		base.SetDraggedState();
 		dragUpdate = StartCoroutine(DragUpdate());
-		TileManager.instance.DisplayTiles(GetDestinationTiles(), TileManager.Tile.Move);
+		TileManager.instance.DisplayTiles(GetDestinationTiles(), HighlightType.Move);
 		HUDManager.instance.HideSideButtons();
 	}
 
@@ -96,7 +88,7 @@ public class PlayerCharacter : Character
 		base.SetFinishState();
 		sprite.GetComponent<SpriteRenderer>().color = new Color(0.2f, 0.2f, 0.2f, 0.8f);
 		HUDManager.instance.HideSideButtons();
-		HUDManager.instance.HideBottomDetails();
+		HUDManager.instance.HideCharacterBottom();
 		HUDManager.instance.HideSkillsBar();
 		TileManager.instance.RemoveTiles();
 		CheckEndPhase();
@@ -142,8 +134,9 @@ public class PlayerCharacter : Character
 				// Highlight current tile
 				Vector2 tileOverflown = MapManager.instance.GetModelCoordinates(transform.localPosition + new Vector3(0, 0, 0));
 				if (tileOverflown != overflownCoordinates) {
+					TileManager.instance.RemoveTiles(new List<Vector2>{overflownCoordinates}, HighlightType.Move);
 					overflownCoordinates = tileOverflown;
-					TileManager.instance.DisplayTiles(new List<Vector2>{overflownCoordinates}, TileManager.Tile.Target);
+					TileManager.instance.DisplayTiles(new List<Vector2>{overflownCoordinates}, HighlightType.Target);
 				}
 			}
 			else {

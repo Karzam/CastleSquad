@@ -85,7 +85,7 @@
 			"rangeMinDist": 1,
 			"range": 4,
 			"zoneType": "Square",
-			"zoneRange": 2,
+			"zoneRange": 1,
 			"damage": 8,
 			"heal": 0,
 			"durationDamage": 0,
@@ -103,3 +103,4 @@
 		}
 	]
 }
+

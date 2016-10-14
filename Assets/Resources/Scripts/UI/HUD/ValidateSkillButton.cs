@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DetailButton : ButtonElement
+public class ValidateSkillButton : ButtonElement
 {
 	GameObject detailPopup;
 
