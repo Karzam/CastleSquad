@@ -26,7 +26,7 @@ public class MapManager : MonoBehaviour
 	/*
 	 * Draw the tilemap and fill the model array
 	 */
-	public void InitializeMap()
+	public void Initialize()
 	{
 		GameObject grassMap = Resources.Load<GameObject>("Prefabs/Maps/Grass") as GameObject;
 		grassMap.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Maps/grass_map");
@@ -90,7 +90,7 @@ public class MapManager : MonoBehaviour
 	 */
 	public GameObject GetObjectWithModelCoordinates(Vector2 position)
 	{
-		return model[new Vector2(Mathf.Floor(position.x / TILE_SIZE), Mathf.Floor(position.y / TILE_SIZE))];
+		return model[new Vector2(position.x, position.y)];
 	}
 
 }

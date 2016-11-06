@@ -47,6 +47,15 @@ public class SkillManager : MonoBehaviour
 	}
 
 	/*
+	 * Trigger skill
+	 */
+	public void TriggerSkill()
+	{
+		// Damage animation
+		AnimationManager.instance.PlayDamageAnimation(MapManager.instance.GetObjectWithModelCoordinates(targets[0]).GetComponent<Character>().sprite);
+	}
+
+	/*
 	 * Return true if one character is casting skill
 	 */
 	public bool isCastingSkill()
@@ -63,6 +72,7 @@ public class SkillManager : MonoBehaviour
 		if (targets.Contains(target.coordinates))
 		{
 			// Deselect
+			HUDManager.instance.HideValidateSkillButtons();
 			TileManager.instance.RemoveTiles(targets);
 			TileManager.instance.DisplayTiles(GetTargetTiles(), HighlightType.Skill);
 			targets.Clear();
@@ -84,6 +94,7 @@ public class SkillManager : MonoBehaviour
 					}
 				}
 
+				HUDManager.instance.DisplayValidateSkillButton(character.transform.position);
 				TileManager.instance.DisplayTiles(targets, HighlightType.Target);
 			}
 		}

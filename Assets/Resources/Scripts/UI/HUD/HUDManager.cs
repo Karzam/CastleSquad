@@ -163,6 +163,19 @@ public class HUDManager : MonoBehaviour
 	/*
 	 * Display validate skill button
 	 */
+	public void DisplayValidateSkillButton(Vector2 position)
+	{
+		buttonValidateSkill.transform.position = new Vector3(position.x, position.y - 10, -2);
+		buttonValidateSkill.SetActive(true);
+	}
+
+	/*
+	 * Hide validate skill button
+	 */
+	public void HideValidateSkillButtons()
+	{
+		buttonValidateSkill.SetActive(false);
+	}
 
 }
 

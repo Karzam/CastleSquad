@@ -53,6 +53,7 @@ public class PlayerCharacter : Character
 		base.SetIdleState();
 		HUDManager.instance.HideCharacterBottom();
 		HUDManager.instance.HideSideButtons();
+		HUDManager.instance.HideValidateSkillButtons();
 		HUDManager.instance.HideSkillsBar();
 		TileManager.instance.RemoveTiles();
 	}

@@ -3,12 +3,13 @@ using System;
 using System.Collections;
 
 [Serializable]
+
+/**
+ * Range types => Full, Cross, Away
+ * Zone types => Cross, Square
+ */
 public class SkillData
 {
-	/*
-	 * Range types => Full, Cross, Away
- 	 * Zone types => Cross, Square
-	 */
 	public string name;
 	public int duration;
 	public int cooldown;

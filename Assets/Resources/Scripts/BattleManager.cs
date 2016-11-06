@@ -31,7 +31,7 @@ public class BattleManager : MonoBehaviour
 		HUDManager.instance.Initialize();
 		SkillManager.instance.Initialize();
 		Controller.instance.Initialize();
-		MapManager.instance.InitializeMap();
+		MapManager.instance.Initialize();
 
 		InstantiatePlayerCharacters();
 		InstantiateEnemyCharacters();
@@ -67,7 +67,7 @@ public class BattleManager : MonoBehaviour
 	{
 		Dictionary<string, Vector2> characters = new Dictionary<string, Vector2>()
 		{
-			{"Goblin_Warrior", new Vector2(10, 2)}
+			{"Goblin_Warrior", new Vector2(9, 2)}
 		};
 
 		foreach (var character in characters)

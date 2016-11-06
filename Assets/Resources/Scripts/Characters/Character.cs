@@ -16,7 +16,7 @@ public class Character : MonoBehaviour
 	// Current model coordinates
 	public Vector2 coordinates;
 
-	/*
+	/**
 	 * Current state of the character :
 	 * 
 	 * Idle      => Beginning of the player phase
@@ -39,7 +39,7 @@ public class Character : MonoBehaviour
 	public bool moved;
 
 	// Sprite child
-	protected GameObject sprite;
+	public GameObject sprite;
 
 	// Overflown coordinates when dragged
 	protected Vector2 overflownCoordinates = Vector2.zero;
