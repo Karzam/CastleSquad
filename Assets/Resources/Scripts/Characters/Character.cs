@@ -55,7 +55,7 @@ public class Character : MonoBehaviour
 	{
 		list.Add(gameObject);
 		sprite = transform.FindChild("Sprite").gameObject;
-		tileOffset = new Vector2(MapManager.TILE_SIZE / 2, 4);
+		tileOffset = new Vector2(MapManager.TILE_SIZE / 2, 0);
 		coordinates = startCoordinates;
 
 		SetPosition(coordinates);
@@ -161,4 +161,3 @@ public class Character : MonoBehaviour
 	}
 
 }
-

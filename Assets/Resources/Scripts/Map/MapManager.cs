@@ -12,10 +12,10 @@ public class MapManager : MonoBehaviour
 
 	public Dictionary<Vector2, GameObject> model;
 
-	public const float TILE_SIZE = 22.4f;
+	public const float TILE_SIZE = 26.8f;
 	
-	public const int MAP_WIDTH = 14;
-	public const int MAP_HEIGHT = 6;
+	public const int MAP_WIDTH = 10;
+	public const int MAP_HEIGHT = 5;
 
 
 	void Awake()
@@ -30,8 +30,9 @@ public class MapManager : MonoBehaviour
 	{
 		GameObject grassMap = Resources.Load<GameObject>("Prefabs/Maps/Grass") as GameObject;
 		grassMap.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Maps/grass_map");
-		GameObject map = Instantiate(grassMap, GameObject.Find("Map").transform) as GameObject;
-		map.transform.position = new Vector3(-156, 66.9f, 0);
+		GameObject map = Instantiate<Object>(grassMap) as GameObject;
+        map.transform.parent = GameObject.Find("Map").transform;
+        map.transform.position = new Vector3(-136, 66f, 0);
 
 		model = new Dictionary<Vector2, GameObject>();
 

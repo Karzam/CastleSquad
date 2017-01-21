@@ -24,7 +24,8 @@ public class DetailButton : ButtonElement
 		base.OnMouseUp();
 
 		Transform parent = GameObject.Find("UI").transform;
-		detailPopup = Instantiate(Resources.Load("Prefabs/UI/Popup/PopupDetail"), parent) as GameObject;
+		detailPopup = Instantiate<Object>(Resources.Load("Prefabs/UI/Popup/PopupDetail")) as GameObject;
+        detailPopup.transform.parent = parent;
 		HUDManager.instance.HideSideButtons();
 		if (isPlayerCharacter) detailPopup.GetComponent<DetailPopup>().FillPlayerCharacterData(data);
 		else detailPopup.GetComponent<DetailPopup>().FillEnemyCharacterData(data);

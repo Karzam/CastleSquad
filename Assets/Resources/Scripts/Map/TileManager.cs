@@ -49,7 +49,7 @@ public class TileManager : MonoBehaviour
 			{
 				GameObject lTile = Instantiate(Resources.Load<GameObject>("Prefabs/Tiles/Tile")) as GameObject;
 				lTile.transform.parent = parent;
-				lTile.transform.localPosition = MapManager.instance.GetViewCoordinates(new Vector2(x, y));
+				lTile.transform.localPosition = new Vector2 (MapManager.instance.GetViewCoordinates (new Vector2 (x, y)).x + 3.2f, MapManager.instance.GetViewCoordinates (new Vector2 (x, y)).y + 0.4f);
 				tiles.Add(new Vector2(x, y), lTile);
 			}
 		}

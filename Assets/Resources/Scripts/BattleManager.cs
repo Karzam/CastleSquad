@@ -46,17 +46,18 @@ public class BattleManager : MonoBehaviour
 	{
 		Dictionary<string, Vector2> characters = new Dictionary<string, Vector2>()
 		{
-			{"Tyr", new Vector2(2, 4)},
-			{"Ambu", new Vector2(7, 2)},
-			{"Orag", new Vector2(3, 1)},
-			{"Korri", new Vector2(7, 4)}
+			{"Tyr", new Vector2(1, 1)},
+			//{"Ambu", new Vector2(7, 2)},
+			//{"Orag", new Vector2(3, 1)},
+			//{"Korri", new Vector2(7, 4)}
 		};
 
 		foreach (var character in characters)
 		{
 			Transform parent = GameObject.Find("Characters").transform;
-			GameObject chara = Instantiate(Resources.Load("Prefabs/Battle/PlayerCharacter"), parent) as GameObject;
-			chara.GetComponent<Character>().Initialize(character.Key, character.Value);
+			GameObject chara = Instantiate<Object>(Resources.Load("Prefabs/Battle/PlayerCharacter")) as GameObject;
+            chara.transform.SetParent(parent);
+            chara.GetComponent<Character>().Initialize(character.Key, character.Value);
 		}
 	}
 
@@ -67,13 +68,14 @@ public class BattleManager : MonoBehaviour
 	{
 		Dictionary<string, Vector2> characters = new Dictionary<string, Vector2>()
 		{
-			{"Goblin_Warrior", new Vector2(9, 2)}
+			//{"Goblin_Warrior", new Vector2(9, 2)}
 		};
 
 		foreach (var character in characters)
 		{
 			Transform parent = GameObject.Find("Characters").transform;
-			GameObject chara = Instantiate(Resources.Load("Prefabs/Battle/EnemyCharacter"), parent) as GameObject;
+			GameObject chara = Instantiate<Object>(Resources.Load("Prefabs/Battle/EnemyCharacter")) as GameObject;
+            chara.transform.SetParent(parent);
 			chara.GetComponent<Character>().Initialize(character.Key, character.Value);
 		}
 	}

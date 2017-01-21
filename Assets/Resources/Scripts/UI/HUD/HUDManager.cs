@@ -41,20 +41,25 @@ public class HUDManager : MonoBehaviour
 
 		topLabel = GameObject.Find("TopLabel");
 
-		characterBottom = Instantiate(Resources.Load("Prefabs/UI/HUD/CharacterSelectedHUD"), parent) as GameObject;
+		characterBottom = Instantiate(Resources.Load<Object>("Prefabs/UI/HUD/CharacterSelectedHUD")) as GameObject;
+        characterBottom.transform.parent = parent;
 		characterBottom.SetActive(false);
 
-		skillsBar = Instantiate(Resources.Load("Prefabs/UI/HUD/SkillBar"), parent) as GameObject;
-		skillsBar.SetActive(false);
+		skillsBar = Instantiate<Object>(Resources.Load("Prefabs/UI/HUD/SkillBar")) as GameObject;
+        skillsBar.transform.parent = parent;
+        skillsBar.SetActive(false);
 
-		buttonDetail = Instantiate(Resources.Load("Prefabs/UI/HUD/ButtonDetail"), parent) as GameObject;
-		buttonDetail.SetActive(false);
+		buttonDetail = Instantiate<Object>(Resources.Load("Prefabs/UI/HUD/ButtonDetail")) as GameObject;
+        buttonDetail.transform.parent = parent;
+        buttonDetail.SetActive(false);
 
-		buttonFinish = Instantiate(Resources.Load("Prefabs/UI/HUD/ButtonFinish"), parent) as GameObject;
-		buttonFinish.SetActive(false);
+		buttonFinish = Instantiate<Object>(Resources.Load("Prefabs/UI/HUD/ButtonFinish")) as GameObject;
+        buttonFinish.transform.parent = parent;
+        buttonFinish.SetActive(false);
 
-		buttonValidateSkill = Instantiate(Resources.Load("Prefabs/UI/HUD/ButtonValidateSkill"), parent) as GameObject;
-		buttonValidateSkill.SetActive(false);
+		buttonValidateSkill = Instantiate<Object>(Resources.Load("Prefabs/UI/HUD/ButtonValidateSkill")) as GameObject;
+        buttonValidateSkill.transform.parent = parent;
+        buttonValidateSkill.SetActive(false);
 	}
 
 	/*
@@ -82,8 +87,7 @@ public class HUDManager : MonoBehaviour
 	 */
 	void StartPlayerPhase()
 	{
-		topLabel.GetComponent<Text>().text = "Player Phase";
-		topLabel.GetComponent<Animation>().Play();
+		topLabel.GetComponent<Text>().text = "PLAYER PHASE";
 	}
 
 	/*
@@ -91,8 +95,7 @@ public class HUDManager : MonoBehaviour
 	 */
 	void StartEnemyPhase()
 	{
-		topLabel.GetComponent<Text>().text = "Enemy Phase";
-		topLabel.GetComponent<Animation>().Play();
+		topLabel.GetComponent<Text>().text = "ENEMY PHASE";
 	}
 
 	/*
